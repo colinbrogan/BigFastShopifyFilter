@@ -65,6 +65,7 @@
 						console.log("xD");
 						console.log("Defaults Are:");
 						console.log(defaults);
+						console.log("changed againh");
 				},
 				yourOtherFunction: function () {
 						// some logic
