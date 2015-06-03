@@ -14,7 +14,7 @@
 		// minified (especially when both are regularly referenced in your plugin).
 
 		// Create the defaults once
-		var pluginName = "jquery-big-shopify-sort",
+		var pluginName = "bigFastShopifyFilter",
 				defaults = {
 				propertyName: "value"
 		};

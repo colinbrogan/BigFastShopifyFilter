@@ -1,5 +1,5 @@
 {
-  "name": "jquery-big-shopify-sort",
+  "name": "jquery-bigFastShopifyFilter",
   "version": "0.1",
   "description": "Designed to sort and filter products using key value pairs in tags and metafields. Performs much faster on massive collections, and includes infinite scroll pagination",
   "keywords": [
@@ -12,17 +12,17 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/colinbrogan/jquery-big-shopify-sort.git"
+    "url": "git://github.com/colinbrogan/BigFastShopifyFilter.git"
   },
   "bugs": {
-    "url": "git://github.com/colinbrogan/jquery-big-shopify-sort.git/issues"
+    "url": "http://github.com/colinbrogan/BigFastShopifyFilter.git/issues"
   },
   "author": {
     "name": "Colin Brogan",
     "email": "colinbrogan@gmail.com",
     "url": "https://github.com/colinbrogan"
   },
-  "homepage": "http://colinbrogan.info/dev/jquery-big-shopify-sort",
+  "homepage": "http://colinbrogan.info/dev/big-fast-shopify-filter",
   "contributors": [
     {
       "name": "Colin Brogan",

@@ -23,14 +23,14 @@ module.exports = function(grunt) {
 				banner: "<%= meta.banner %>"
 			},
 			dist: {
-				src: ["src/jquery.big-shopify-sort.js"],
-				dest: "dist/jquery.big-shopify-sort.js"
+				src: ["src/jquery.bigFastShopifyFilter.js"],
+				dest: "dist/jquery.big-fast-shopify-filter.js"
 			}
 		},
 
 		// Lint definitions
 		jshint: {
-			files: ["src/jquery.big-shopify-sort.js"],
+			files: ["src/jquery.bigFastShopifyFilter.js"],
 			options: {
 				jshintrc: ".jshintrc"
 			}
@@ -39,8 +39,8 @@ module.exports = function(grunt) {
 		// Minify definitions
 		uglify: {
 			my_target: {
-				src: ["dist/jquery.big-shopify-sort.js"],
-				dest: "dist/jquery.big-shopify-sort.min.js"
+				src: ["dist/jquery.big-fast-shopify-filter.js"],
+				dest: "dist/jquery.big-fast-shopify-filter.min.js"
 			},
 			options: {
 				banner: "<%= meta.banner %>"
