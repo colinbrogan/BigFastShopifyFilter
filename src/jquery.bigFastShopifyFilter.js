@@ -15,8 +15,29 @@
 
 		// Create the defaults once
 		var pluginName = "bigFastShopifyFilter",
-				defaults = {
-				propertyName: "value"
+				defaults =  {
+					key_value_overrides: null,
+					metafields: null,
+					tagfields: null,
+					price: {
+							enable: true,
+							ui_label: 'Price',
+							ui_component: 'range-slider',
+							placement: 'sidebar',
+							range_splits: 4
+					},
+					vendor: {
+							enable: true,
+							ui_component: 'sidebar',
+							placement: 'sidebar',
+							one_option_hide: true,
+					},
+					type: {
+							enable: true,
+							ui_component: 'checkbox-button-group',
+							placement: 'sidebar',
+							one_option_hide: true,
+					},
 		};
 
 		// The actual plugin constructor
@@ -42,6 +63,8 @@
 						// you can add more functions like the one below and
 						// call them like so: this.yourOtherFunction(this.element, this.settings).
 						console.log("xD");
+						console.log("Defaults Are:")
+						console.log(defaults);
 				},
 				yourOtherFunction: function () {
 						// some logic

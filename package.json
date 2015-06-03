@@ -1,6 +1,6 @@
 {
   "name": "jquery-bigFastShopifyFilter",
-  "version": "0.1",
+  "version": "v0.0.1",
   "description": "Designed to sort and filter products using key value pairs in tags and metafields. Performs much faster on massive collections, and includes infinite scroll pagination",
   "keywords": [
     "jquery",
@@ -8,7 +8,7 @@
     "shopify",
     "faceted-search",
     "filtering",
-    "jquery-plugin",
+    "jquery-plugin"
   ],
   "repository": {
     "type": "git",
@@ -39,5 +39,5 @@
     "grunt-contrib-jshint": "^0.11.0",
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1"
-  },
+  }
 }
