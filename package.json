@@ -1,0 +1,43 @@
+{
+  "name": "jquery-big-shopify-sort",
+  "version": "0.1",
+  "description": "Designed to sort and filter products using key value pairs in tags and metafields. Performs much faster on massive collections, and includes infinite scroll pagination",
+  "keywords": [
+    "jquery",
+    "plugin",
+    "shopify",
+    "faceted-search",
+    "filtering",
+    "jquery-plugin",
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/colinbrogan/jquery-big-shopify-sort.git"
+  },
+  "bugs": {
+    "url": "git://github.com/colinbrogan/jquery-big-shopify-sort.git/issues"
+  },
+  "author": {
+    "name": "Colin Brogan",
+    "email": "colinbrogan@gmail.com",
+    "url": "https://github.com/colinbrogan"
+  },
+  "homepage": "http://colinbrogan.info/dev/jquery-big-shopify-sort",
+  "contributors": [
+    {
+      "name": "Colin Brogan",
+      "email": "colinbrogan@gmail.com",
+      "url": "https://github.com/colinbrogan"
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-coffee": "^0.12.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-uglify": "^0.8.0",
+    "grunt-contrib-watch": "^0.6.1"
+  },
+}

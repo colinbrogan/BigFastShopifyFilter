@@ -1,0 +1,29 @@
+{
+  "name": "jquery-big-shopify-sort",
+  "version": "0.1",
+  "homepage": "http://cbrogan.info",
+  "authors": [
+    "Colin Brogan <colinbrogan@gmail.com>"
+  ],
+  "description": "Designed to sort and filter products using key value pairs in tags and metafields. Performs much faster on massive collections, and includes infinite scroll pagination",
+  "main": "src/jquery.big-shopify-sort.js",
+  "keywords": [
+    "jquery",
+    "plugin",
+    "shopify",
+    "faceted-search",
+    "filtering",
+    "jquery-plugin",
+  ],
+  "license": "MIT",
+  "_release": "0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1",
+    "commit": ""
+  },
+  "_source": "git://github.com/colinbrogan/jquery-big-shopify-sort.git",
+  "_target": "~1.0",
+  "_originalSource": "jquery-boilerplate",
+  "_direct": true
+}
