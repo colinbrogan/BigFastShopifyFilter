@@ -1,9 +1,9 @@
 /*
- *  jquery-boilerplate - v3.4.0
- *  A jump-start for jQuery plugins development.
- *  http://jqueryboilerplate.com
+ *  jquery-bigFastShopifyFilter - vv0.0.1
+ *  Designed to sort and filter products using key value pairs in tags and metafields. Performs much faster on massive collections, and includes infinite scroll pagination
+ *  http://colinbrogan.info/dev/big-fast-shopify-filter
  *
- *  Made by Zeno Rocha
+ *  Made by Colin Brogan
  *  Under MIT License
  */
 // the semi-colon before function invocation is a safety net against concatenated
@@ -22,9 +22,30 @@
 		// minified (especially when both are regularly referenced in your plugin).
 
 		// Create the defaults once
-		var pluginName = "defaultPluginName",
-				defaults = {
-				propertyName: "value"
+		var pluginName = "bigFastShopifyFilter",
+				defaults =  {
+					key_value_overrides: null,
+					metafields: null,
+					tagfields: null,
+					price: {
+							enable: true,
+							ui_label: "Price",
+							ui_component: "range-slider",
+							placement: "sidebar",
+							range_splits: 4
+					},
+					vendor: {
+							enable: true,
+							ui_component: "sidebar",
+							placement: "sidebar",
+							one_option_hide: true,
+					},
+					type: {
+							enable: true,
+							ui_component: "checkbox-button-group",
+							placement: "sidebar",
+							one_option_hide: true,
+					},
 		};
 
 		// The actual plugin constructor
@@ -50,6 +71,8 @@
 						// you can add more functions like the one below and
 						// call them like so: this.yourOtherFunction(this.element, this.settings).
 						console.log("xD");
+						console.log("Defaults Are:");
+						console.log(defaults);
 				},
 				yourOtherFunction: function () {
 						// some logic
