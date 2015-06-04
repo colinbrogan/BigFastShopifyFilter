@@ -16,6 +16,8 @@
 		// Create the defaults once
 		var pluginName = "bigFastShopifyFilter",
 				defaults =  {
+					filter_criteria: null,
+					paginate: 20,
 					key_value_overrides: null,
 					metafields: null,
 					tagfields: null,
@@ -58,11 +60,6 @@
 
 		/******* Private Methods go here ******/
 
-		var somePrivateMethod = function(info) {
-			privateInfo = info;
-			console.log("somePrivateMethod fired with "+privateInfo);
-		};
-
 		var renderTemplate = function(data) {
 			/**** process data here ****/
 
@@ -72,6 +69,7 @@
 			"</div>"
 			].join();
 		};
+
 
 		// Avoid Plugin.prototype conflicts
 		$.extend(Plugin.prototype, {
@@ -89,16 +87,36 @@
 				},
 				/********** instance variables  ****************/
 				filtered: null,
-				allRetrieved: null,
+				allReceived: null,
+				displayEndIndex: 0,
+				params: 
 				/********** public Methods ***************/
+				go: function(params) {
+					if(allReceived == null) {
+						var doWithEachLoad = function(load) {
+							$(this.element).trigger("loadReceived",load);
+						};
+						Shopify.Mazer.pipeInCollection(collection_handle,doWithEachLoad) {
+					}
+				}
 				filter: function(params) {
+					this.ceaseAll();
 					for(var param in params) {
 						console.log(param+":"+params[param]);
 					}
 					$(this.element).trigger("loadReceived");   
 				},
+				ceaseAll: function() {
+
+				},
+				storeAllReceived: function(load) {
+					for (handle in load.products) {
+						this.allReceived[handle] = load.products[handle];
+					}
+				},
 				trickleToGrid: function(load) {
-					for(var something in load) {
+					for(var product in load.products) {
+						determinePlacement()
 						renderTemplate(load[something]);
 					}
 					console.log(load);
@@ -133,13 +151,17 @@
 		// A really lightweight plugin wrapper around the constructor,
 		// preventing against multiple instantiations
 		$.fn[ pluginName ] = function ( options ) {
+				this.go(options.filter_criteria);
 				if(this.data("fast-start") !== undefined) {
-
+					var load = this.data("fast-start");
+					this.storeAllReceived(load);
+					filter();
 				}
 				/****** custom events go here ******/
 
-				this.on("loadReceived",function() {
-					console.log("loadReceived Fired");
+				this.on("loadReceived",function(load) {
+					this.storeAllReceived(load);
+					filter();
 				});
 
 				var args = arguments;
