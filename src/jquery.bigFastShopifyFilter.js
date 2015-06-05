@@ -89,22 +89,24 @@
 				filtered: null,
 				allReceived: null,
 				displayEndIndex: 0,
-				params: 
+				filter_criteria: null,
 				/********** public Methods ***************/
 				go: function(params) {
+					this.filter_criteria = params;
 					if(allReceived == null) {
 						var doWithEachLoad = function(load) {
 							$(this.element).trigger("loadReceived",load);
 						};
 						Shopify.Mazer.pipeInCollection(collection_handle,doWithEachLoad) {
+					} else {
+						filter();
 					}
-				}
-				filter: function(params) {
-					this.ceaseAll();
-					for(var param in params) {
+				},
+				filter: function() {
+					for(var product_handle)
+					for(var param in this.filter_critera) {
 						console.log(param+":"+params[param]);
 					}
-					$(this.element).trigger("loadReceived");   
 				},
 				ceaseAll: function() {
 
@@ -113,6 +115,9 @@
 					for (handle in load.products) {
 						this.allReceived[handle] = load.products[handle];
 					}
+				},
+				getAllReceived: function() {
+					return this.allReceived;
 				},
 				trickleToGrid: function(load) {
 					for(var product in load.products) {
@@ -134,7 +139,6 @@
 					this.someInfo = info;
 					console.log("Set someInfo to "+this.someInfo);
 				},
-
 
 				/********* Public Getters ****************/
 				getSomeInfo: function() {
