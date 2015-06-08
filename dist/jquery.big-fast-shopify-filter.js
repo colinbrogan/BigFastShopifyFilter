@@ -112,7 +112,8 @@
 				go: function(params) {
 					$(this.element).find("ul.product-grid").empty();
 					console.log("go fired");
-					console.log(this.collection_handle);
+
+					console.log($(this.element).find("ul.product-grid"));
 					this.filter_criteria = params;
 					var $theElement = $(this.element);
 					this.filter();
@@ -125,6 +126,7 @@
 					}
 				},
 				filter: function() {
+					this.filtered = {};
 					console.log("filter fired");
 					/* loop through every product of this collection */
 					for(var handle in this.allReceived) {
@@ -192,7 +194,6 @@
 					console.log("theCollectionHandle");
 					console.log(theCollectionHandle);
 					var renderTemplate = function(product) {
-						console.log("hit renderTemplate");
 						var kvp = {};
 						for(var tagI in product.info.tags) {
 							var tag = product.info.tags[tagI];
@@ -201,7 +202,6 @@
 								kvp[tagsplit[1]] = tagsplit[2];
 							}
 						}
-						console.log("passed tag Loop");
 						var condition = "";
 						switch(product.metafields.Condition) {
 							case "S&D":
@@ -217,7 +217,6 @@
 								condition = "Closeout";
 								break;
 						}
-						console.log("past condition switch");
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
 								'<div class="snapshot">',
@@ -269,22 +268,26 @@
 					console.log(this.filtered);
 					var thePrototypeExtension = this;
 					for(var handle in this.filtered) {
+						var $productInsert = $(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
 						if($("ul.product-grid li").length > 0) {
 							var pg_loop = function(pg_index) {
-
+								if("p"+thePrototypeExtension.filtered[handle].info.id == "p422298235") {
+									console.log("On first mal-sorted product");
+									console.log(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property]+" < "+$(this).data('json').info[thePrototypeExtension.sort_property]);
+								}
 								if($(this).data("json").info.id == thePrototypeExtension.filtered[handle].info.id) {
 									return false;
-								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sortProperty] < $(this).data('json').info[thePrototypeExtension.sortProperty]) {
-									$(this).before(renderTemplate(thePrototypeExtension.filtered[handle])).data('json',this.filtered[handle]);
+								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this).data('json').info[thePrototypeExtension.sort_property]) {
+									$(this).before($productInsert);
 									return false;
 								} else if(pg_index == ($("ul.product-grid li").length - 1)) {
-									$(this).after(renderTemplate(thePrototypeExtension.filtered[handle])).data('json',this.filtered[handle]);
+									$(this).after($productInsert);
 									return false;
 								}
 							};
 							$("ul.product-grid li").each(pg_loop);
 						} else {
-							$("ul.product-grid").append(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
+							$("ul.product-grid").append($productInsert);
 						}
 
 					}
