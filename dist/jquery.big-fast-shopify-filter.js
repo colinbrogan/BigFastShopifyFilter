@@ -69,16 +69,6 @@
 
 		/******* Private Methods go here ******/
 
-		var renderTemplate = function(data) {
-			/**** process data here ****/
-
-			return [
-			"<div>",
-			data.title,
-			"</div>"
-			].join();
-		};
-
 
 		// Avoid Plugin.prototype conflicts
 		$.extend(Plugin.prototype, {
@@ -89,7 +79,6 @@
 						// and this.settings
 						// you can add more functions like the one below and
 						// call them like so: this.yourOtherFunction(this.element, this.settings).
-
 
 						if($(this.element).data("collection") !== undefined) {
 							this.setCollectionHandle($(this.element).data("collection"));
@@ -118,8 +107,10 @@
 				collection_handle: null,
 				filter_criteria: null,
 				load_complete: false,
+				sort_property: "price",
 				/********** public Methods ***************/
 				go: function(params) {
+					$(this.element).find("ul.product-grid").empty();
 					console.log("go fired");
 					console.log(this.collection_handle);
 					this.filter_criteria = params;
@@ -180,7 +171,7 @@
 					}
 					console.log("filtered");
 					console.log(this.filtered);
-					trickleToGrid();
+					this.trickleToGrid();
 				},
 				ceaseAll: function() {
 
@@ -196,14 +187,126 @@
 				getAllReceived: function() {
 					return this.allReceived;
 				},
-				trickleToGrid: function(load) {
-					for(var product in load.products) {
-						renderTemplate(load.products[product]);
+				trickleToGrid: function() {
+					var theCollectionHandle = this.collection_handle;
+					console.log("theCollectionHandle");
+					console.log(theCollectionHandle);
+					var renderTemplate = function(product) {
+						console.log("hit renderTemplate");
+						var kvp = {};
+						for(var tagI in product.info.tags) {
+							var tag = product.info.tags[tagI];
+							if(tag.indexOf("kvp:") === 0) {
+								var tagsplit = tag.split(":");
+								kvp[tagsplit[1]] = tagsplit[2];
+							}
+						}
+						console.log("passed tag Loop");
+						var condition = "";
+						switch(product.metafields.Condition) {
+							case "S&D":
+								condition = "Scratch & Dent";
+								break;
+							case "NITB":
+								condition = "New In Box";
+								break;
+							case "SO":
+								condition = "Special Order";
+								break;
+							case "CO":
+								condition = "Closeout";
+								break;
+						}
+						console.log("past condition switch");
+						return [
+							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
+								'<div class="snapshot">',
+									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image">',
+										'<img src="'+product.info.images[0].replace(".jpeg","_small.jpeg")+'" alt="" />',
+									'</a>',
+									'<dl class="specs">',
+										'<div class="spec-wrap">',
+											'<dt>MODEL</dt>',
+											'<dd>'+product.info.handle.split('-')[0]+'</dd>',
+										'</div>',
+										'<div class="spec-wrap">',
+											'<dt>SERIAL</dt>',
+											'<dd>'+product.info.handle.split('-')[1]+'</dd>',
+										'</div>',
+										'<div class="spec-wrap">',
+											'<dt>CAPACITY</dt>',
+											'<dd>'+kvp["Total Capacity (cubic feet)"]+'</dd>',
+										'</div>',
+										'<div class="spec-wrap">',
+											'<dt>LOCATION</dt>',
+											'<dd>'+product.metafields.Location+'</dd>',
+										'</div>',
+										'<div class="spec-wrap long">',
+											'<dt>DIMENSIONS</dt>',
+											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
+										'</div>',
+									'</dl>',
+								'</div>',
+					            '<div class="price-condition">',
+					                '<dl class="price">',
+					                	'<dt><span hidden>Price</span></dt>',
+					                	'<dd>$'+product.info.price/100+'</dd>',
+					                '</dl>',
+					                '<div class="count-breakout">',
+					                	'<div>',
+						                    '<span class="tag-count '+product.metafields.Condition.replace("&", "").toLowerCase()+'">',
+						                    	condition,
+						                    '</span>',
+					                  	'</div>',
+					                '</div>',
+					            '</div>',
+					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+product.info.title+'</a></h4>',
+					            '</li>',
+						].join("");
+					};
+/*					var pGridIndex = 0;				*/
+					console.log("this.filtered");
+					console.log(this.filtered);
+					var thePrototypeExtension = this;
+					for(var handle in this.filtered) {
+						if($("ul.product-grid li").length > 0) {
+							var pg_loop = function(pg_index) {
+
+								if($(this).data("json").info.id == thePrototypeExtension.filtered[handle].info.id) {
+									return false;
+								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sortProperty] < $(this).data('json').info[thePrototypeExtension.sortProperty]) {
+									$(this).before(renderTemplate(thePrototypeExtension.filtered[handle])).data('json',this.filtered[handle]);
+									return false;
+								} else if(pg_index == ($("ul.product-grid li").length - 1)) {
+									$(this).after(renderTemplate(thePrototypeExtension.filtered[handle])).data('json',this.filtered[handle]);
+									return false;
+								}
+							};
+							$("ul.product-grid li").each(pg_loop);
+						} else {
+							$("ul.product-grid").append(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
+						}
+
 					}
-					console.log(load);
-					console.log("hello");
-					somePrivateMethod(load);
-					console.log("trickleToGrid set someInfo2 through private method to "+privateInfo);
+/*					Old attempt at loop
+					while($("ul.product-grid li").length < Shopify.Mazer.utilities.keyCount(this.filtered)) {
+						if($("ul.product-grid li")[pGridIndex !== undefined]) {
+							var $current_element = $("ul.product-grid li")[pGridIndex];
+							if(product.info[sortProperty] < $current_element.data('json').info[sortProperty]) {
+								console.log(this.filtered[pGridIndex]);
+								$current_element.before(renderTemplate(this.filtered[pGridIndex]));
+							} else {
+								console.log(this.filtered[pGridIndex]);
+								$current_element.after(renderTemplate(this.filtered[pGridIndex]));
+							}
+						} else {
+							console.log(this.filtered[pGridIndex]);
+							$("ul.product-grid").append(renderTemplate(this.filtered[pGridIndex]));
+						}
+
+						pGridIndex++;
+					}
+*/
 				},
 				refresh: function() {
 					console.log("refresh");

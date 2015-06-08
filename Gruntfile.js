@@ -32,7 +32,8 @@ module.exports = function(grunt) {
 		jshint: {
 			files: ["src/jquery.bigFastShopifyFilter.js"],
 			options: {
-				jshintrc: ".jshintrc"
+				jshintrc: ".jshintrc",
+       			quotmark: true,
 			}
 		},
 

@@ -1,13 +1,13 @@
 {
 	"boss": true,
 	"curly": true,
-	"eqeqeq": true,
+	"eqeqeq": false,
 	"eqnull": true,
 	"expr": true,
 	"immed": true,
 	"noarg": true,
 	"onevar": true,
-	"quotmark": "double",
+	"quotmark": false,
 	"unused": true,
 	"node": true
 }
