@@ -109,6 +109,9 @@
 				filter_criteria: null,
 				load_complete: false,
 				sort_property: "price",
+				$queuedForScroll: $(),
+				$productGrid: $(),
+				page: 1,
 				/********** public Methods ***************/
 				go: function(params) {
 					$(this.element).find("ul.product-grid").empty();
@@ -126,7 +129,6 @@
 				},
 				filter: function() {
 					this.filtered = {};
-					console.log("filter fired");
 					/* loop through every product of this collection */
 					for(var handle in this.allReceived) {
 						/* leave determines whether or not a product matches all parameters and should be displayed, it begins as true. The idea being, if any current sort parameter doesn't match to the product, the product is discarded. This seems to me be the fastest means of narrowing down a listing */
@@ -170,8 +172,6 @@
 						}
 						
 					}
-					console.log("filtered");
-					console.log(this.filtered);
 					this.trickleToGrid();
 				},
 				storeAllReceived: function(load) {
@@ -294,8 +294,6 @@
 						}
 						this.allReceived[handle] = load.products[handle];
 					}
-					console.log("this.filter_options");
-					console.log(this.filter_options);
 				},
 				renderOptions: function() {
 					var return_string = "";
@@ -409,51 +407,71 @@
 						].join("");
 					};
 /*					var pGridIndex = 0;				*/
-					console.log("this.filtered");
-					console.log(this.filtered);
 					var thePrototypeExtension = this;
-					for(var handle in this.filtered) {
-						var $productInsert = $(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
-						if($("ul.product-grid li").length > 0) {
+					var paginateCount = 0;
+					var sortedAdd = function($productHouser,$productInsert,cap) {
+						var add_to_next = false;
+						var placed_item = false;
+						if($productHouser.find("li").length > 0) {
 							var pg_loop = function(pg_index) {
+
 								if($(this).data("json").info.id == thePrototypeExtension.filtered[handle].info.id) {
+									placed_item = true;
+									console.log(0);
 									return false;
 								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this).data('json').info[thePrototypeExtension.sort_property]) {
 									$(this).before($productInsert);
+									paginateCount++;
+									if($productHouser.find("li").length > cap) {
+										var $stray_item = $productHouser.find("li:last-child");
+										add_to_next = $stray_item.clone();
+										$stray_item.remove();
+									}
+									placed_item = true;
+									console.log(1);
 									return false;
-								} else if(pg_index == ($("ul.product-grid li").length - 1)) {
+								} else if(pg_index == $productHouser.find("li").length - 1 && pg_index < (cap - 1)) {
 									$(this).after($productInsert);
+									paginateCount++;
+									placed_item = true;
+									console.log(2);
 									return false;
 								}
 							};
-							$("ul.product-grid li").each(pg_loop);
+							$productHouser.find("li").each(pg_loop);
 						} else {
-							$("ul.product-grid").append($productInsert);
+							$productHouser.append($productInsert);
+							placed_item = true;
+							console.log(3);
+						}
+						return {
+							placed_item: placed_item,
+							add_to_next: add_to_next
+						};
+					};
+					for(var handle in this.filtered) {
+						var $productInsert = $(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
+						var $productGrid = $("ul.product-grid");
+						// Choose where to put the product
+						var cap = this.settings.paginate*this.page;
+						var results = sortedAdd($productGrid,$productInsert,cap);
+						if(results.add_to_next) {
+							console.log("results.add_to_next");
+							console.log(results.add_to_next);
+							this.$queuedForScroll.prepend(results.add_to_next);
+						}
+						if(!results.placed_item) {
+							console.log("sortAdd on queuedForScroll");
+							this.$queuedForScroll.add($productInsert);
+//							sortedAdd(this.$queuedForScroll,$productInsert,10000);
 						}
 
 					}
+					console.log("queuedForScroll");
+					console.log(this.$queuedForScroll);
 					$(this.element).find("#options-go-here").empty();
 					$(this.element).find("#options-go-here").append(this.renderOptions());
 					this.registerActions();
-/*					Old attempt at loop
-					while($("ul.product-grid li").length < Shopify.Mazer.utilities.keyCount(this.filtered)) {
-						if($("ul.product-grid li")[pGridIndex !== undefined]) {
-							var $current_element = $("ul.product-grid li")[pGridIndex];
-							if(product.info[sortProperty] < $current_element.data('json').info[sortProperty]) {
-								console.log(this.filtered[pGridIndex]);
-								$current_element.before(renderTemplate(this.filtered[pGridIndex]));
-							} else {
-								console.log(this.filtered[pGridIndex]);
-								$current_element.after(renderTemplate(this.filtered[pGridIndex]));
-							}
-						} else {
-							console.log(this.filtered[pGridIndex]);
-							$("ul.product-grid").append(renderTemplate(this.filtered[pGridIndex]));
-						}
-
-						pGridIndex++;
-					}
-*/
 				},
 				registerActions: function() {
 					$("ul.tick-boxes button").click(function(event) {
