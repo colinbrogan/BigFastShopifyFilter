@@ -94,6 +94,7 @@
 				},
 				/********** instance variables  ****************/
 				filtered: {},
+				filter_options: {},
 				allReceived: {},
 				displayEndIndex: 0,
 				collection_handle: null,
@@ -104,8 +105,6 @@
 				go: function(params) {
 					$(this.element).find("ul.product-grid").empty();
 					console.log("go fired");
-
-					console.log($(this.element).find("ul.product-grid"));
 					this.filter_criteria = params;
 					var $theElement = $(this.element);
 					this.filter();
@@ -167,16 +166,154 @@
 					console.log(this.filtered);
 					this.trickleToGrid();
 				},
-				ceaseAll: function() {
-
-				},
 				storeAllReceived: function(load) {
 					if(this.allReceived == null) {
 						this.allReceived = {};
 					}
 					for (var handle in load.products) {
+						for (var metafield in load.products[handle].metafields) {
+							var metafield_value = load.products[handle].metafields[metafield];
+							// Make sure this is a filterable property
+							if(this.settings.metafields.hasOwnProperty(metafield)) {
+								// Do not go further if this option already has a value, prevents 
+								// repetitive calculations
+								if(this.filter_options.hasOwnProperty(metafield)) {
+									if(this.filter_options[metafield].hasOwnProperty(metafield_value)) {
+										break;
+									} else {
+										this.filter_options[metafield][metafield_value] = {};
+									}
+								} else {
+									this.filter_options[metafield] = {};
+									this.filter_options[metafield][metafield_value] = {};
+								}
+										// determine whether or not the filter option has custom information
+										// defined in theme options
+										if(this.settings.filter_values.hasOwnProperty(metafield)) {
+
+											// Flush out custom labels, colors and images, 
+											// if defined in the theme options.
+
+											if(this.settings.filter_values[metafield].hasOwnProperty(metafield_value)) {
+
+												var option_label = this.settings.filter_values[metafield][metafield_value].label;
+												var option_color = this.settings.filter_values[metafield][metafield_value].color;
+												var option_image = this.settings.filter_values[metafield][metafield_value].image;
+												if(option_label) {
+													this.filter_options[metafield][metafield_value].label = option_label;
+												} else {
+													this.filter_options[metafield][metafield_value].label = metafield_value;
+												}
+												if(option_color) {
+													this.filter_options[metafield][metafield_value].color = option_color;
+												}
+												if(option_image) {
+													this.filter_options[metafield][metafield_value].image = option_image;
+												}
+
+											} else {
+
+												// if field value not defined in theme settings,
+												// add value as title
+												this.filter_options[metafield][metafield_value].label = metafield_value;
+											}
+										} else {
+
+											// if field name not defined in theme settings,
+											// add value as title
+											this.filter_options[metafield][metafield_value].label = metafield_value;
+										}
+							}
+						}
+						for (var tag in load.products[handle].info.tags) {
+							var tagPreValue = load.products[handle].info.tags[tag];
+							if (tagPreValue.indexOf("kvp:") === 0) {
+								var splitFields = tagPreValue.split(":");
+								var field_name = splitFields[1];
+								var field_value = splitFields[2];
+								// Make sure this is a filterable property
+								if(this.settings.tagfields.hasOwnProperty(field_name)) {
+
+									// Do not go further if this option already has a value, prevents 
+									// repetitive calculations
+									if(this.filter_options.hasOwnProperty(field_name)) {
+										if(this.filter_options[field_name].hasOwnProperty(field_value)) {
+											break;
+										} else {
+											this.filter_options[field_name][field_value] = {};
+										}
+									} else {
+										this.filter_options[field_name] = {};
+										this.filter_options[field_name][field_value] = {};
+									}
+											// determine whether or not the filter option has custom information
+											// defined in theme options
+											if(this.settings.filter_values.hasOwnProperty(field_name)) {
+
+												// Flush out custom labels, colors and images, 
+												// if defined in the theme options.
+												if(this.settings.filter_values[field_name].hasOwnProperty(field_value)) {
+													var option_label = this.settings.filter_values[field_name][field_value].label;
+													var option_color = this.settings.filter_values[field_name][field_value].color;
+													var option_image = this.settings.filter_values[field_name][field_value].image;
+													if(option_label) {
+														this.filter_options[field_name][field_value].label = option_label;
+													} else {
+														this.filter_options[field_name][field_value].label = field_value;
+													}
+													if(option_color) {
+														this.filter_options[field_name][field_value].color = option_color;
+													}
+													if(option_image) {
+														this.filter_options[field_name][field_value].image = option_image;
+													}
+
+												} else {
+
+													// if field value not defined in theme settings,
+													// add value as title
+													this.filter_options[field_name][field_value].label = field_value;
+												}
+											} else {
+
+												// if field name not defined in theme settings,
+												// add value as title
+												this.filter_options[field_name][field_value].label = field_value;
+											}
+
+								}
+							}
+						}
 						this.allReceived[handle] = load.products[handle];
 					}
+					console.log("this.filter_options");
+					console.log(this.filter_options);
+				},
+				renderOptions: function() {
+					var return_string = "";
+					for(var option in this.filter_options) {
+						return_string += "<h3>"+option.toUpperCase()+"</h3>";
+						return_string += "<ul class=\"tick-boxes\">";
+						for(var value in this.filter_options[option]) {
+							var valueObject = this.filter_options[option][value];
+							var active_string = "";
+							if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option))) {
+								if(this.filter_criteria[option] == encodeURIComponent(value)) {
+									active_string += "active";
+								}
+							}
+							var background_string = "";
+							if(valueObject.color) {
+								background_string += "background-color: "+valueObject.color;
+							}
+							if(valueObject.image) {
+								background_string += "; background-image: url("+valueObject.image+");";
+							}
+							return_string += "<li><button class=\""+active_string+"\" name=\""+option+"\" value=\""+value+"\"><div class=\"tick-box\" style=\""+background_string+"\"></div>"+valueObject.label+"</button></li>";
+						}
+						return_string += "</ul>";
+					}
+					return return_string;
 				},
 				getAllReceived: function() {
 					return this.allReceived;
@@ -209,11 +346,19 @@
 								condition = "Closeout";
 								break;
 						}
+						var image_string = "";
+						if(product.info.vendor == "LG") {
+							image_string = '<img src="'+product.info.images[0].replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
+
+						} else if(product.info.vendor == "GE") {
+							image_string = '<img src="'+product.info.images[0].replace(".jpeg","_small.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
+
+						}
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
 								'<div class="snapshot">',
 									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image">',
-										'<img src="'+product.info.images[0].replace(".jpeg","_small.jpeg")+'" alt="" />',
+										image_string,
 									'</a>',
 									'<dl class="specs">',
 										'<div class="spec-wrap">',
@@ -263,10 +408,6 @@
 						var $productInsert = $(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
 						if($("ul.product-grid li").length > 0) {
 							var pg_loop = function(pg_index) {
-								if("p"+thePrototypeExtension.filtered[handle].info.id == "p422298235") {
-									console.log("On first mal-sorted product");
-									console.log(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property]+" < "+$(this).data('json').info[thePrototypeExtension.sort_property]);
-								}
 								if($(this).data("json").info.id == thePrototypeExtension.filtered[handle].info.id) {
 									return false;
 								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this).data('json').info[thePrototypeExtension.sort_property]) {
@@ -283,6 +424,9 @@
 						}
 
 					}
+					$(this.element).find("#options-go-here").empty();
+					$(this.element).find("#options-go-here").append(this.renderOptions());
+					this.registerActions();
 /*					Old attempt at loop
 					while($("ul.product-grid li").length < Shopify.Mazer.utilities.keyCount(this.filtered)) {
 						if($("ul.product-grid li")[pGridIndex !== undefined]) {
@@ -303,16 +447,20 @@
 					}
 */
 				},
+				registerActions: function() {
+					$("ul.tick-boxes button").click(function(event) {
+						event.preventDefault();
+						var field_name = $(this).attr("name");
+						var field_value = $(this).attr("value");
+						$.address.parameter(field_name,encodeURIComponent(field_value),false);
+					});
+				},
 				refresh: function() {
 					console.log("refresh");
 					somePrivateMethod("refresh");
 				},
 
 				/********* Public Setters ****************/
-				setSomeInfo: function(info) {
-					this.someInfo = info;
-					console.log("Set someInfo to "+this.someInfo);
-				},
 				setCollectionHandle: function(collection_handle) {
 					this.collection_handle = collection_handle;
 				},
