@@ -101,14 +101,17 @@
 				filter_criteria: null,
 				load_complete: false,
 				sort_property: "price",
-				$queuedForScroll: $(),
+				queuedForScroll: [],
 				$productGrid: $(),
+				scroll_adding: false,
 				page: 1,
 				/********** public Methods ***************/
 				go: function(params) {
 					$(this.element).find("ul.product-grid").empty();
 					console.log("go fired");
+					this.queuedForScroll = [];
 					this.filter_criteria = params;
+					this.page = 1;
 					var $theElement = $(this.element);
 					this.filter();
 					if(this.load_complete === false) {
@@ -164,6 +167,8 @@
 						}
 						
 					}
+					console.log("current this.filtered "+this.filtered.length+" items.");
+					console.log(this.filtered);
 					this.trickleToGrid();
 				},
 				storeAllReceived: function(load) {
@@ -286,8 +291,11 @@
 						}
 						this.allReceived[handle] = load.products[handle];
 					}
+					console.log('Current allReceived '+this.allReceived.length+" items.");
+					console.log(this.allReceived);
 				},
 				renderOptions: function() {
+					console.log(this.filter_options);
 					var return_string = "";
 					for(var option in this.filter_options) {
 						return_string += "<h3>"+option.toUpperCase()+"</h3>";
@@ -400,8 +408,7 @@
 					};
 /*					var pGridIndex = 0;				*/
 					var thePrototypeExtension = this;
-					var paginateCount = 0;
-					var sortedAdd = function($productHouser,$productInsert,cap) {
+					var sortedAddToGrid = function($productHouser,$productInsert,cap) {
 						var add_to_next = false;
 						var placed_item = false;
 						if($productHouser.find("li").length > 0) {
@@ -409,24 +416,19 @@
 
 								if($(this).data("json").info.id == thePrototypeExtension.filtered[handle].info.id) {
 									placed_item = true;
-									console.log(0);
 									return false;
 								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this).data('json').info[thePrototypeExtension.sort_property]) {
 									$(this).before($productInsert);
-									paginateCount++;
 									if($productHouser.find("li").length > cap) {
 										var $stray_item = $productHouser.find("li:last-child");
 										add_to_next = $stray_item.clone();
 										$stray_item.remove();
 									}
 									placed_item = true;
-									console.log(1);
 									return false;
 								} else if(pg_index == $productHouser.find("li").length - 1 && pg_index < (cap - 1)) {
 									$(this).after($productInsert);
-									paginateCount++;
 									placed_item = true;
-									console.log(2);
 									return false;
 								}
 							};
@@ -434,7 +436,6 @@
 						} else {
 							$productHouser.append($productInsert);
 							placed_item = true;
-							console.log(3);
 						}
 						return {
 							placed_item: placed_item,
@@ -446,23 +447,35 @@
 						var $productGrid = $("ul.product-grid");
 						// Choose where to put the product
 						var cap = this.settings.paginate*this.page;
-						var results = sortedAdd($productGrid,$productInsert,cap);
+						var results = sortedAddToGrid($productGrid,$productInsert,cap);
 						if(results.add_to_next) {
-							console.log("results.add_to_next");
-							console.log(results.add_to_next);
-							this.$queuedForScroll.prepend(results.add_to_next);
+							this.queuedForScroll.unshift(results.add_to_next);
 						}
 						if(!results.placed_item) {
-							console.log("sortAdd on queuedForScroll");
-							this.$queuedForScroll.add($productInsert);
+							if(this.queuedForScroll.length > 0) {
+								for(var i in this.queuedForScroll) {
+									if($(this.queuedForScroll[i]).data('json').info[thePrototypeExtension.sort_property].id == thePrototypeExtension.filtered[handle].info.id) {
+										return false;
+									} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this.queuedForScroll[i]).data('json').info[thePrototypeExtension.sort_property]) {
+										this.queuedForScroll.splice(i - 1, 0, $productInsert);
+										return false;
+									} else if(i == this.queuedForScroll.length - 1) {
+										this.queuedForScroll.push($productInsert);
+										return false;
+									}
+								}
+							} else {
+								this.queuedForScroll.push($productInsert);
+							}
+
+
 //							sortedAdd(this.$queuedForScroll,$productInsert,10000);
 						}
 
 					}
-					console.log("queuedForScroll");
-					console.log(this.$queuedForScroll);
 					$(this.element).find("#options-go-here").empty();
 					$(this.element).find("#options-go-here").append(this.renderOptions());
+					console.log("renderOptions appended");
 					this.registerActions();
 				},
 				registerActions: function() {
@@ -472,6 +485,30 @@
 						var field_value = $(this).attr("value");
 						$.address.parameter(field_name,encodeURIComponent(field_value),false);
 					});
+					var thePrototypeExtension = this;
+					$(window).scroll(function() {
+						var marginFromBottom = 50;
+						console.log(thePrototypeExtension.scroll_adding);
+						// determine if the user is at the bottom of the page
+						if( ($("body").scrollTop() >= ($("body").height() - $(window).height() - marginFromBottom)) && !thePrototypeExtension.scroll_adding) {
+							thePrototypeExtension.scroll_adding = true;
+							console.log("You are at the bottom of the page");
+							thePrototypeExtension.infiniteScroll();
+						}
+					});
+				},
+				infiniteScroll: function() {
+					console.log("hit infiniteScroll");
+					this.page = this.page + 1;
+					var index = 0;
+					console.log(this.settings.paginate);
+					console.log(this.queuedForScroll);
+					while(index < this.settings.paginate) {
+						console.log(index);
+						$('ul.product-grid').append( this.queuedForScroll.shift() );
+						index++;
+					}
+					this.scroll_adding = false;
 				},
 				refresh: function() {
 					console.log("refresh");
