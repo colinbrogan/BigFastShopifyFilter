@@ -318,10 +318,15 @@
 							}
 							var background_string = "";
 							if(valueObject.color) {
-								background_string += "background-color: "+valueObject.color;
+								background_string += "background-color: "+valueObject.color+"; ";
+								console.log("valueObject.color.replace(#,),16) < 10329501");
+								console.log(parseInt(valueObject.color.replace("#",""),16)+" < "+10329501);
+								if(parseInt(valueObject.color.replace("#",""),16) < 10329501) {
+									active_string += " white-tick";
+								}
 							}
 							if(valueObject.image) {
-								background_string += "; background-image: url("+valueObject.image+");";
+								background_string += "background-image: url("+valueObject.image+"); ";
 							}
 							return_string += "<li><button class=\""+active_string+"\" name=\""+option+"\" value=\""+value+"\"><div class=\"tick-box\" style=\""+background_string+"\"></div>"+valueObject.label+"</button></li>";
 						}
