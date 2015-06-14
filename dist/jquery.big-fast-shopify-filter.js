@@ -334,8 +334,6 @@
 				},
 				trickleToGrid: function() {
 					var theCollectionHandle = this.collection_handle;
-					console.log("theCollectionHandle");
-					console.log(theCollectionHandle);
 					var renderTemplate = function(product) {
 						var kvp = {};
 						for(var tagI in product.info.tags) {
@@ -421,11 +419,11 @@
 						var placed_item = false;
 						if($productHouser.find("li").length > 0) {
 							var pg_loop = function(pg_index) {
-
-								if($(this).data("json").info.id == thePrototypeExtension.filtered[handle].info.id) {
+								var compare_handle = $(this).attr('data-filter-index');
+								if(thePrototypeExtension.filtered[compare_handle].info.id == thePrototypeExtension.filtered[handle].info.id) {
 									placed_item = true;
 									return false;
-								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this).data('json').info[thePrototypeExtension.sort_property]) {
+								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[compare_handle].info[thePrototypeExtension.sort_property]) {
 									$(this).before($productInsert);
 									if($productHouser.find("li").length > cap) {
 										var $stray_item = $productHouser.find("li:last-child");
@@ -451,7 +449,7 @@
 						};
 					};
 					for(var handle in this.filtered) {
-						var $productInsert = $(renderTemplate(this.filtered[handle])).data('json',this.filtered[handle]);
+						var $productInsert = $(renderTemplate(this.filtered[handle])).attr('data-filter-index',handle);
 						var $productGrid = $("ul.product-grid");
 						// Choose where to put the product
 						var cap = this.settings.paginate*this.page;
@@ -462,14 +460,15 @@
 						if(!results.placed_item) {
 							if(this.queuedForScroll.length > 0) {
 								for(var i in this.queuedForScroll) {
-									if($(this.queuedForScroll[i]).data('json').info[thePrototypeExtension.sort_property].id == thePrototypeExtension.filtered[handle].info.id) {
-										return false;
-									} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < $(this.queuedForScroll[i]).data('json').info[thePrototypeExtension.sort_property]) {
+									var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
+									if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
+										break;
+									} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[filterIndex].info[thePrototypeExtension.sort_property]) {
 										this.queuedForScroll.splice(i - 1, 0, $productInsert);
-										return false;
+										break;
 									} else if(i == this.queuedForScroll.length - 1) {
 										this.queuedForScroll.push($productInsert);
-										return false;
+										break;
 									}
 								}
 							} else {
