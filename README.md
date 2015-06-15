@@ -2,7 +2,7 @@
 
 ### You want a good filtering system for Shopify
 
-The current filtering solutions for a amazon-style list of product attributes is difficult if impossible to come by. The technical term for this is a faceted search. This plugin is a solution for filtering key value pairs, defined  by tags or metafields. That's right, you've defined your custom metafield data for your products, now you can expose them as filterable options on your collection page. It can support massive numbers of products, and is fast! Even better, your clients can specify which tags or metafields to filter by.
+The current filtering solutions for a amazon-style list of product attributes is difficult if impossible to come by. The technical term for this is a faceted search. This plugin is a solution for filtering key value pairs, defined  by tags or metafields. That's right, you've defined your custom metafield data for your products, now you can expose them as filterable options on your collection page. It can support massive numbers of products, and is fast! Even better, your clients can specify which tags or metafields to filter by in their Theme's settings (look at src/settings.html).
 
 
 ## Usage
