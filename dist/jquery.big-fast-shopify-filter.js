@@ -107,7 +107,7 @@
 				displayEndIndex: 0,
 				collection_handle: null,
 				filter_criteria: null,
-				load_complete: false,
+				all_loads_in: false,
 				sort_property: "price",
 				queuedForScroll: [],
 				$productGrid: $(),
@@ -122,11 +122,36 @@
 					this.page = 1;
 					var $theElement = $(this.element);
 					this.filter();
-					if(this.load_complete === false) {
+					console.log("something has been changed 2")
+					if(this.all_loads_in === false) {
 						var doWithEachLoad = function(load) {
 							$theElement.trigger("loadReceived",load);
 						};
-						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad);
+						var thePrototypeExtension = this;
+						var done = function(response) {
+							console.log("done fired here");
+							thePrototypeExtension.all_loads_in = true;
+							var filteredEmpty = true;
+							for(var i in thePrototypeExtension.filtered) {
+								filteredEmpty = false;
+								break;
+							}
+							console.log("filteredEmpty");
+							console.log(filteredEmpty);
+							if(filteredEmpty) {
+								$('ul.product-grid').html([
+									"<li class='emtpy-message'>",
+										"Nothing matched your filter criteria.",
+										"<a href='#' class='clear-all'>",
+										"Clear All <i class='icon icon-close'></i>",
+										"</a>",
+									"</li>",
+									].join("")
+								);	
+							}
+						};
+						console.log("something has been changed")
+						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,done);
 					} else {
 					}
 				},
@@ -138,15 +163,35 @@
 						var toFiltered = true;
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
-							var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria]);
+							
 							if(this.settings.metafields.hasOwnProperty(criteria)) {
 								for(var metafield in this.allReceived[handle].metafields) {
 									var current_metafield_value = this.allReceived[handle].metafields[metafield];
 									if(metafield === criteria) {
-										if(current_metafield_value === current_criteria_value) {
-											/* do nothing */
+										// When multiple url parameters are present,
+										// combine results
+										if(this.filter_criteria[criteria].constructor == Array) {
+											var somethingMatched = false;
+											for(var i in this.filter_criteria[criteria]) {
+												var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria][i].replace(/\+/g, '%20'));
+												if(current_metafield_value === current_criteria_value) {
+													somethingMatched = true;
+												}
+											}
+											if(somethingMatched) {
+												/* do nothing */
+											} else {
+												toFiltered = false;
+											}
+										// if a single parameter is present,
+										// then filter on that parameter only
 										} else {
-											toFiltered = false;
+											var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
+											if(current_metafield_value === current_criteria_value) {
+												/* do nothing */
+											} else {
+												toFiltered = false;
+											}
 										}
 									}
 								}
@@ -158,11 +203,29 @@
 										var splitFields = tagPreValue.split(":");
 										var field_name = splitFields[1];
 										var field_value = splitFields[2];
-										if(field_name === criteria) {
-											if(current_criteria_value === field_value) {
-												/* do nothing */
+										if(field_name === criteria) {		
+											if(this.filter_criteria[criteria].constructor == Array) {
+												var somethingMatched = false;
+												for(var i in this.filter_criteria[criteria]) {
+													var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria][i].replace(/\+/g, '%20'));
+													if(field_value === current_criteria_value) {
+														somethingMatched = true;
+													}
+												}
+												if(somethingMatched) {
+													/* do nothing */
+												} else {
+													toFiltered = false;
+												}
+											// if a single parameter is present,
+											// then filter on that parameter only
 											} else {
-												toFiltered = false;
+												var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
+												if(current_criteria_value === field_value) {
+													/* do nothing */
+												} else {
+													toFiltered = false;
+												}
 											}
 										}
 
@@ -305,22 +368,37 @@
 				renderOptions: function() {
 					console.log(this.filter_options);
 					var return_string = "";
+
 					for(var option in this.filter_options) {
 						return_string += "<h3>"+option.toUpperCase()+"</h3>";
 						return_string += "<ul class=\"tick-boxes\">";
 						for(var value in this.filter_options[option]) {
 							var valueObject = this.filter_options[option][value];
 							var active_string = "";
-							if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option))) {
-								if(this.filter_criteria[option] == encodeURIComponent(value)) {
+							// Wrap all strings passed into jquery.param in array literals
+							console.log('this.filter_criteria.hasOwnProperty( encodeURIComponent(option).replace("%20","+") )');
+							console.log(this.filter_criteria);
+							console.log(encodeURIComponent(option).replace(/%20/g,"+"));
+							if(this.filter_criteria.hasOwnProperty( encodeURIComponent(option).replace(/%20/g,"+") )) {
+								console.log('this.filter_criteria[encodeURIComponent(option).replace("%20","+")] === encodeURIComponent(value).replace("%20","+")');
+								console.log(this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")]+' === '+encodeURIComponent(value).replace(/%20/g,"+"));
+								if(this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")] === encodeURIComponent(value).replace(/%20/g,"+") ) {
 									active_string += "active";
+								} else if(this.filter_criteria[encodeURIComponent(option)].constructor === Array) {
+									for(var i in this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")]) {
+
+										console.log("in renderOptions for loop");
+										console.log('this.filter_criteria[encodeURIComponent(option)][i] === encodeURIComponent(value).replace("%20","+") ');
+										console.log(this.filter_criteria[encodeURIComponent(option)][i]+" === "+encodeURIComponent(value).replace(/%20/g,"+"));
+										if(this.filter_criteria[encodeURIComponent(option)][i] === encodeURIComponent(value).replace(/%20/g,"+") ) {
+											active_string += "active";
+										}
+									}
 								}
 							}
 							var background_string = "";
 							if(valueObject.color) {
 								background_string += "background-color: "+valueObject.color+"; ";
-								console.log("valueObject.color.replace(#,),16) < 10329501");
-								console.log(parseInt(valueObject.color.replace("#",""),16)+" < "+10329501);
 								if(parseInt(valueObject.color.replace("#",""),16) < 10329501) {
 									active_string += " white-tick";
 								}
@@ -453,38 +531,38 @@
 							add_to_next: add_to_next
 						};
 					};
-					for(var handle in this.filtered) {
-						var $productInsert = $(renderTemplate(this.filtered[handle])).attr('data-filter-index',handle);
-						var $productGrid = $("ul.product-grid");
-						// Choose where to put the product
-						var cap = this.settings.paginate*this.page;
-						var results = sortedAddToGrid($productGrid,$productInsert,cap);
-						if(results.add_to_next) {
-							this.queuedForScroll.unshift(results.add_to_next);
-						}
-						if(!results.placed_item) {
-							if(this.queuedForScroll.length > 0) {
-								for(var i in this.queuedForScroll) {
-									var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
-									if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
-										break;
-									} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[filterIndex].info[thePrototypeExtension.sort_property]) {
-										this.queuedForScroll.splice(i - 1, 0, $productInsert);
-										break;
-									} else if(i == this.queuedForScroll.length - 1) {
-										this.queuedForScroll.push($productInsert);
-										break;
-									}
-								}
-							} else {
-								this.queuedForScroll.push($productInsert);
+					var filteredEmpty = true;
+						for(var handle in this.filtered) {
+							filteredEmpty = false;
+							var $productInsert = $(renderTemplate(this.filtered[handle])).attr('data-filter-index',handle);
+							var $productGrid = $("ul.product-grid");
+							// Choose where to put the product
+							var cap = this.settings.paginate*this.page;
+							var results = sortedAddToGrid($productGrid,$productInsert,cap);
+							if(results.add_to_next) {
+								this.queuedForScroll.unshift(results.add_to_next);
 							}
-
-
-//							sortedAdd(this.$queuedForScroll,$productInsert,10000);
+							if(!results.placed_item) {
+								if(this.queuedForScroll.length > 0) {
+									for(var i in this.queuedForScroll) {
+										var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
+										if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
+											break;
+										} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[filterIndex].info[thePrototypeExtension.sort_property]) {
+											this.queuedForScroll.splice(i - 1, 0, $productInsert);
+											break;
+										} else if(i == this.queuedForScroll.length - 1) {
+											this.queuedForScroll.push($productInsert);
+											break;
+										}
+									}
+								} else {
+									this.queuedForScroll.push($productInsert);
+								}
+							}
 						}
 
-					}
+
 					$(this.element).find("#options-go-here").empty();
 					$(this.element).find("#options-go-here").append(this.renderOptions());
 					console.log("renderOptions appended");
@@ -493,9 +571,32 @@
 				registerActions: function() {
 					$("ul.tick-boxes button").click(function(event) {
 						event.preventDefault();
-						var field_name = $(this).attr("name");
-						var field_value = $(this).attr("value");
-						$.address.parameter(field_name,encodeURIComponent(field_value),false);
+
+						if( $(this).hasClass("active") ) {
+							$(this).removeClass('active');
+						} else {
+							$(this).addClass("active");
+						}
+						// wipe out previous hashURL's
+						var new_values = {};
+						$(this).parents('#options-go-here').find('ul.tick-boxes button.active').each(function() {
+							var field_name = $(this).attr("name");
+							var field_value = $(this).attr("value");
+							if(new_values[field_name] == undefined) {
+								new_values[field_name] = [];
+							}
+							new_values[field_name].push(field_value);
+						});
+
+						var new_query_string = jQuery.param( new_values, true);
+						console.log(new_query_string);
+						$.address.queryString(new_query_string);
+
+
+					});
+					$("a.clear-all").click(function(event) {
+						event.preventDefault();
+						$.address.queryString("");
 					});
 					var thePrototypeExtension = this;
 					$(window).scroll(function() {
