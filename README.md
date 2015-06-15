@@ -1,4 +1,4 @@
-# jQuery Boilerplate [![Build Status](https://github.com/colinbrogan/bigFastShopifyFilter.git)](https://github.com/colinbrogan/bigFastShopifyFilter.git) ![Bower Version](https://github.com/colinbrogan/bigFastShopifyFilter.git)
+# jQuery BigFastShopifyFilter, v0.9.0
 
 ### You want a good filtering system for Shopify
 
@@ -69,9 +69,9 @@ There is a little bit of setup, but follow the directions below closely, and you
 
 
 
-#### [demo/](https://github.com/jquery-boilerplate/boilerplate/tree/master/demo)
+#### [demo/](https://github.com/colinbrogan/bigFastShopifyFilter)
 
-Contains a simple HTML file to demonstrate your plugin.
+This link goes nowhere for now, soon it will be a Shopify theme preview, showing everything in action.
 
 ## Team
 
