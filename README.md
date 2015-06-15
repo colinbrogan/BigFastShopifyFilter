@@ -1,143 +1,85 @@
-# jQuery Boilerplate [![Build Status](https://secure.travis-ci.org/jquery-boilerplate/jquery-boilerplate.svg?branch=master)](https://travis-ci.org/jquery-boilerplate/jquery-boilerplate) ![Bower Version](https://badge.fury.io/bo/jquery-boilerplate.svg)
+# jQuery Boilerplate [![Build Status](https://github.com/colinbrogan/bigFastShopifyFilter.git)](https://github.com/colinbrogan/bigFastShopifyFilter.git) ![Bower Version](https://github.com/colinbrogan/bigFastShopifyFilter.git)
 
-### A jump-start for jQuery plugins development
+### You want a good filtering system for Shopify
 
-So, you've tried your hand at writing jQuery plugins and you're comfortable putting together something that probably works. Awesome! Thing is, you think there might be better ways you could be writing them - you've seen them done a number of different ways in the wild, but aren't really sure what the differences between these patterns are or how to get started with them.
+The current filtering solutions for a amazon-style list of product attributes is difficult if impossible to come by. The technical term for this is a faceted search. This plugin is a solution for filtering key value pairs, defined  by tags or metafields. That's right, you've defined your custom metafield data for your products, now you can expose them as filterable options on your collection page. It can support massive numbers of products, and is fast! Even better, your clients can specify which tags or metafields to filter by.
 
-This project won't seek to provide a perfect solution to every possible pattern, but will attempt to cover a simple template for beginners and above. By using a basic defaults object, simple constructor for assigning the element to work with and extending options with defaults and a lightweight wrapper around the constructor to avoid issues with multiple instantiations.
 
 ## Usage
 
-1. Include jQuery:
+There is a little bit of setup, but follow the directions below closely, and you will be ready to go:
+
+1. Drop our liquid files in your theme:
+
+	Add "collection.ajaxy.liquid" to your `shop/templates` directory
+
+	Add "ajax-the-collection.liquid" to your `shop/snippets` directory
+
+	(*** optional ***)
+	If you want your client to adjust the settings of this plugin in the theme:
+
+	Add the contents of "settings.html" to the end of your theme's `shop/config/settings.html`, or overwrite it 	directly to start from scratch
+
+2. Add our javascript to your theme:
+
+	Add "dist/shopify.pipeInCollection.min.js" to `shop/assets`
+
+	Add "dist/jquery.big-fast-shopify-filter.js" to `shop/assets`
+
+2. Include the javascript at the bottom of your collection page, after the jquery include
 
 	```html
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-	```
+	<script src="{% 'Shopify.pipeInCollection.js' | asset_url %}" />
 
-2. Include plugin's code:
-
-	```html
-	<script src="dist/jquery.boilerplate.min.js"></script>
+	<script src="{% 'jquery.big-fast-shopify-filter.min.js' | asset_url %}" />
 	```
 
 3. Call the plugin:
 
-	```javascript
-	$("#element").defaultPluginName({
+	```ht
+	$("#").defaultPluginName({
 		propertyName: "a custom value"
 	});
 	```
+4. Include the markup in your collection page
 
-## Structure
+	```html
+	<div id="big-fast-shopify-filter" data-collection="{{ collection.handle }}">
+		<!-- include this wherever you want your options to list out -->
+	    <div id="options-go-here"></div>
 
-The basic structure of the project is given in the following way:
+	     <!-- 
+	     	this is your product-grid, the data-fast-start attribute gives the plugin an immediate load of products to filter, so you don't have to wait on the first ajax call to display products
+	     -->
+		    <ul class="product-grid" data-fast-start='{% include "ajax-the-collection" %}'>
 
-```
-├── demo/
-│   └── index.html
-├── dist/
-│   ├── jquery.boilerplate.js
-│   └── jquery.boilerplate.min.js
-├── src/
-│   ├── jquery.boilerplate.coffee
-│   └── jquery.boilerplate.js
-├── .editorconfig
-├── .gitignore
-├── .jshintrc
-├── .travis.yml
-├── boilerplate.jquery.json
-├── Gruntfile.js
-└── package.json
-```
+		    <!-- if you want your products to list when js is disabled in their browser, add the noscript wrapper on your liquid, it will be taken over and replaced by the plugin when js is enabled -->
+		      <noscript>
+		        {% for product in collection.products %}
+					<li>
+					<!-- your product liquid here
+		            </li>
+		        {% endfor %}
+		        </noscript>
+		    </ul>
+	</div>
+	```
+
+	You can include other markup as your theme sees fit, but essentially you need a wrapper with the id "big-fast-shopify-filter" and a data-collection attribute, and an element with an id of "options-go-here" somewhere inside that wrapper, along with the "ul.product-grid" list
+
+
 
 #### [demo/](https://github.com/jquery-boilerplate/boilerplate/tree/master/demo)
 
 Contains a simple HTML file to demonstrate your plugin.
 
-#### [dist/](https://github.com/jquery-boilerplate/boilerplate/tree/master/dist)
-
-This is where the generated files are stored once Grunt runs.
-
-#### [src/](https://github.com/jquery-boilerplate/boilerplate/tree/master/src)
-
-Contains the files responsible for your plugin, you can choose between JavaScript or CoffeeScript.
-
-#### [.editorconfig](https://github.com/jquery-boilerplate/boilerplate/tree/master/.editorconfig)
-
-This file is for unifying the coding style for different editors and IDEs.
-
-> Check [editorconfig.org](http://editorconfig.org) if you haven't heard about this project yet.
-
-#### [.gitignore](https://github.com/jquery-boilerplate/boilerplate/tree/master/.gitignore)
-
-List of files that we don't want Git to track.
-
-> Check this [Git Ignoring Files Guide](https://help.github.com/articles/ignoring-files) for more details.
-
-#### [.jshintrc](https://github.com/jquery-boilerplate/boilerplate/tree/master/.jshintrc)
-
-List of rules used by JSHint to detect errors and potential problems in JavaScript.
-
-> Check [jshint.com](http://jshint.com/about/) if you haven't heard about this project yet.
-
-#### [.travis.yml](https://github.com/jquery-boilerplate/boilerplate/tree/master/.travis.yml)
-
-Definitions for continous integration using Travis.
-
-> Check [travis-ci.org](http://about.travis-ci.org/) if you haven't heard about this project yet.
-
-#### [boilerplate.jquery.json](https://github.com/jquery-boilerplate/boilerplate/tree/master/boilerplate.jquery.json)
-
-Package manifest file used to publish plugins in jQuery Plugin Registry.
-
-> Check this [Package Manifest Guide](http://plugins.jquery.com/docs/package-manifest/) for more details.
-
-#### [Gruntfile.js](https://github.com/jquery-boilerplate/boilerplate/tree/master/Gruntfile.js)
-
-Contains all automated tasks using Grunt.
-
-> Check [gruntjs.com](http://gruntjs.com) if you haven't heard about this project yet.
-
-#### [package.json](https://github.com/jquery-boilerplate/boilerplate/tree/master/package.json)
-
-Specify all dependencies loaded via Node.JS.
-
-> Check [NPM](https://npmjs.org/doc/json.html) for more details.
-
-## Guides
-
-#### How did we get here?
-
-Have you got in this repo and still not sure about using this boilerplate?
-
-Well, extending jQuery with plugins and methods is very powerful and can save you and your peers a lot of development time by abstracting your most clever functions into plugins.
-
-[This awesome guide](https://github.com/jquery-boilerplate/boilerplate/wiki/How-did-we-get-here%3F), adapted from [jQuery Plugins/Authoring](http://docs.jquery.com/Plugins/Authoring), will outline the basics, best practices, and common pitfalls to watch out for as you begin writing your plugin.
-
-#### How to publish plugins?
-
-Also, check our guide on [How to publish a plugin in jQuery Plugin Registry](https://github.com/jquery-boilerplate/boilerplate/wiki/How-to-publish-a-plugin-in-jQuery-Plugin-Registry
-)!
-
-**Note:** The jQuery Plugin Registry is in read-only mode. New plugin releases will not be processed.
-jQuery recommends moving to [npm](https://www.npmjs.com/), using ["jquery-plugin"](https://www.npmjs.com/browse/keyword/jquery-plugin) as the keyword in your package.json. See [how to publish into npm registry](https://gist.github.com/coolaj86/1318304).
-
 ## Team
 
-jQuery Boilerplate was made with love by these guys and a bunch of awesome [contributors](https://github.com/jquery-boilerplate/boilerplate/graphs/contributors).
+This plugin is built by Colin Brogan
 
-[![Zeno Rocha](http://gravatar.com/avatar/e190023b66e2b8aa73a842b106920c93?s=70)](http://zenorocha.com) | [![Addy Osmani](http://gravatar.com/avatar/96270e4c3e5e9806cf7245475c00b275?s=70)](http://addyosmani.com) | [![Helder Santana](http://gravatar.com/avatar/63fb620ee7d14fc91030d4349d189b3e?s=70)](http://heldr.com)
---- | --- | --- | --- | --- | --- | ---
-[Zeno Rocha](http://zenorocha.com) | [Addy Osmani](http://addyosmani.com) | [Helder Santana](http://heldr.com)
+[![Colin Brogan](http://github.com/colinbrogan/)](http://cbrogan.info) 
 
-## Contributing
-
-Check [CONTRIBUTING.md](https://github.com/jquery-boilerplate/boilerplate/blob/master/CONTRIBUTING.md) for more information.
-
-## History
-
-Check [Releases](https://github.com/jquery-boilerplate/jquery-boilerplate/releases) for detailed changelog.
 
 ## License
 
-[MIT License](http://zenorocha.mit-license.org/) © Zeno Rocha
+[MIT License](http://zenorocha.mit-license.org/) © Colin Brogan

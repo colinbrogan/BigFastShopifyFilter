@@ -1,0 +1,821 @@
+<fieldset>
+<legend>Product Sorting</legend>
+<table>
+  <tr>
+    <td colspan="2">
+      <h2>Metafields</h2>
+      <hr/>
+      <p>
+        Add any custom metafields that you want to sort and/or filter on. If the user's javascript is enabled, they will appear, otherwise sorting will default to Shopify's native default options. By specifying "ui component", one can choose the appearance and function of the sorting, a list and explanation is provided below:
+        <ul>
+          <li>Selectbox</li>
+          <li>Mult. Selectbox</li>
+          <li>Radio Buttons</li>
+          <li>Checkbox</li>
+          <li>Range Slide</li>
+        </ul>
+      </p>
+      <table>
+        <tr>
+          <td></td>
+          <td><b>Namespace</b> <br /> <small>(of metafield)</small> </td>
+          <td><b>Field Name</b> <br /> <small>(of metafield)</small></td>
+          <td><b>UI Label</b> <br /> <small>(on collection page)</small></td>
+          <td><b>Filter</b><br /> <small>Enable : UI Component : Placement</small></td>
+          <td><b>Sort</b><br /><small>Enable</small></td>
+        </tr>
+        <tr>
+          <td><small>Opt. 1</small></td>
+          <td><input type="text" name="mf_option_1_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_1_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_1_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="mf_option_1_filter_enable" />
+            <select name="mf_option_1_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_1_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_1_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 2</small></td>
+          <td><input type="text" name="mf_option_2_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_2_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_2_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="mf_option_2_filter_enable" />
+            <select name="mf_option_2_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_2_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_2_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 3</small></td>
+          <td><input type="text" name="mf_option_3_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_3_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_3_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="mf_option_3_filter_enable" />
+            <select name="mf_option_3_filter_ui_component" id="">
+              <option value=""></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_3_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_3_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 4</small></td>
+          <td><input type="text" name="mf_option_4_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_4_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_4_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="mf_option_4_filter_enable" />
+            <select name="mf_option_4_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_4_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_4_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 5</small></td>
+          <td><input type="text" name="mf_option_5_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_5_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_5_ui_label" size="12" /></td>
+          <td><input type="checkbox" name="mf_option_5_filter_enable" />
+            <select name="mf_option_5_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_5_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_5_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 6</small></td>
+          <td><input type="text" name="mf_option_6_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_6_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_6_ui_label" size="12" /></td>
+          <td><input type="checkbox" name="mf_option_6_filter_enable" />
+          <select name="mf_option_6_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_6_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_6_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 7</small></td>
+          <td><input type="text" name="mf_option_7_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_7_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_7_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="mf_option_7_filter_enable" />
+            <select name="mf_option_7_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_7_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_7_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 8</small></td>
+          <td><input type="text" name="mf_option_8_ns" size="6" /></td>
+          <td><input type="text" name="mf_option_8_field_name" size="12" /></td>
+          <td><input type="text" name="mf_option_8_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="mf_option_8_filter_enable" />
+            <select name="mf_option_8_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="mf_option_8_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="mf_option_8_sort_enable" />
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td colspan="2">
+      <h2>Tags</h2>
+      <hr/>
+      <p>
+        Any tags added to a product with the naming scheme kvp:key:value can be used to create sorting and filtering options. For example, 2 products with the tags <em>kvp:color:black</em> and <em>kvp:color:red</em> will generate a selectbox called <em>Color</em> with the two selections black and red to filter the products in any given collection with both. In addition to adding the tags kvp:key:value, one must list the name of the key below to register it as a filter option. Different UI elements can be chosen in a similar way to MetaFields above.
+
+      </p>
+      <table>
+        <tr>
+          <td></td>
+          <td><b>Tag Key</b> <br /> <small>(of metafield)</small></td>
+          <td><b>UI Label</b> <br /> <small>(of collection page)</small></td>
+          <td><b>Filter</b><br /> <small>Enable : UI Component : Placement</small></td>
+          <td><b>Sort</b><br /><small>Enable</small></td>
+        </tr>
+        <tr>
+          <td><small>Opt. 1</small></td>
+          <td><input type="text" name="tag_option_1_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_1_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="tag_option_1_filter_enable" />
+            <select name="tag_option_1_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_1_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_1_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 2</small></td>
+          <td><input type="text" name="tag_option_2_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_2_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="tag_option_2_filter_enable" />
+            <select name="tag_option_2_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_2_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_2_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 3</small></td>
+          <td><input type="text" name="tag_option_3_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_3_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="tag_option_3_filter_enable" />
+            <select name="tag_option_3_filter_ui_component" id="">
+              <option value=""></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_3_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_3_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 4</small></td>
+          <td><input type="text" name="tag_option_4_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_4_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="tag_option_4_filter_enable" />
+            <select name="tag_option_4_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_4_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_4_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 5</small></td>
+          <td><input type="text" name="tag_option_5_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_5_ui_label" size="12" /></td>
+          <td><input type="checkbox" name="tag_option_5_filter_enable" />
+            <select name="tag_option_5_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_5_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_5_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 6</small></td>
+          <td><input type="text" name="tag_option_6_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_6_ui_label" size="12" /></td>
+          <td><input type="checkbox" name="tag_option_6_filter_enable" />
+          <select name="tag_option_6_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_6_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_6_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 7</small></td>
+          <td><input type="text" name="tag_option_7_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_7_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="tag_option_7_filter_enable" />
+            <select name="tag_option_7_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_7_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_7_sort_enable" />
+          </td>
+        </tr>
+        <tr>
+          <td><small>Opt. 8</small></td>
+          <td><input type="text" name="tag_option_8_field_name" size="12" /></td>
+          <td><input type="text" name="tag_option_8_ui_label" size="12" /></td>
+          <td>
+            <input type="checkbox" name="tag_option_8_filter_enable" />
+            <select name="tag_option_8_filter_ui_component" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="radio-button-group">Radio Button Group</option>
+              <option value="checkbox-button-group">Checkbox Button Group</option>  
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider">Range Slider</option>
+            </select>
+            <select name="tag_option_8_filter_layout" id="">
+              <option value="" disabled="disabled"></option>
+              <option value="top">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>
+          </td>
+          <td>
+            <input type="checkbox" name="tag_option_8_sort_enable" />
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td colspan="2">
+      <h2>Price</h2> 
+      <hr/>
+      <p>
+        Add a price range filter. The collections page will read all the prices of its products and divy up the lowest price and highest price into the amount of options specified in "Range Splits". The idea here is that on your Hard Drives collection, if your cheapest hard drive is $40 and your most expensive $470, and you say you want to split the price range by 5, you will get a set of options like so:
+        <br/>
+        $40 - $149, $150 - $249, $250 - $349, $300 - $399, $400 - $470
+        <br/>
+        Depending on the "UI Component" you choose, these will display differently. Checkboxes will list out each one of these from top to bottom, where you can select one or many. Range Slider is very different, where you will have the lowest price on the far left of a slider, and the highest on the far right. There will be notches on the slider which correspond to each price point, and two points form a band which can snap on or around those notches, denoting the range which will show.
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <td> <strong>Filter Enable</strong> </td>
+          <td> <strong>UI Label</strong> </td>
+          <td> <strong>UI Component</strong> </td>
+          <td> <strong>Placement</strong> </td>
+          <td> <strong>Range Splits</strong> </td>
+          <td> <strong>Sort Enable</strong> </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" name="price_filter_enable" value="1" checked="" />         
+          </td>
+          <td>
+            <input type="text" name="price_filter_ui_label" size="12" />
+          </td>
+          <td>
+            <select name="price_filter_ui_component" id="">
+              <option value="" disabled=""></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider" selected="">Range Slider</option>
+            </select>
+          </td>
+          <td>
+            <select name="price_filter_layout" id="">
+              <option value="" disabled=""></option>
+              <option value="top" selected="">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>       
+          </td>
+          <td>
+            <input type="text" name="price_filter_range_splits" value="4" size="2"/>
+          </td>
+          <td>
+            <input type="checkbox" name="price_sort_enable" value="1" checked="" />         
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td colspan="2">
+      <h2>Vendor</h2> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <td> <strong>Filter Enable</strong> </td>
+          <td> <strong>UI Label</strong> </td>
+          <td> <strong>UI Component</strong> </td>
+          <td> <strong>Placement</strong> </td>
+          <td> <strong>Sort Enable</strong> </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" name="vendor_filter_enable" value="1" checked="" />          
+          </td>
+          <td>
+            <input type="text" name="vendor_filter_ui_label" size="12" />
+          </td>
+          <td>
+            <select name="vendor_filter_ui_component" id="">
+              <option value="" disabled=""></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider" selected="">Range Slider</option>
+            </select>
+          </td>
+          <td>
+            <select name="vendor_filter_layout" id="">
+              <option value="" disabled=""></option>
+              <option value="top" selected="">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>       
+          </td>
+          <td>
+            <input type="checkbox" name="vendor_sort_enable" value="1" checked="" />          
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td colspan="2">
+      <h2>Type</h2> 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <td> <strong>Filter Enable</strong> </td>
+          <td> <strong>UI Label</strong> </td>
+          <td> <strong>UI Component</strong> </td>
+          <td> <strong>Placement</strong> </td>
+          <td> <strong>Sort Enable</strong> </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="checkbox" name="type_filter_enable" value="1" checked="" />          
+          </td>
+          <td>
+            <input type="text" name="type_filter_ui_label" size="12" />
+          </td>
+          <td>
+            <select name="type_filter_ui_component" id="">
+              <option value="" disabled=""></option>
+              <option value="selectbox">Selectbox</option>
+              <option value="selectbox-multi">Mult. Selectbox</option>
+              <option value="radio">Radio Buttons</option>
+              <option value="checkbox">Checkbox(es)</option>
+              <option value="range-slider" selected="">Range Slider</option>
+            </select>
+          </td>
+          <td>
+            <select name="type_filter_layout" id="">
+              <option value="" disabled=""></option>
+              <option value="top" selected="">Top</option>
+              <option value="sidebar">Sidebar</option>
+            </select>       
+          </td>
+          <td>
+            <input type="checkbox" name="type_sort_enable" value="1" checked="" />          
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td colspan="2">
+      <h2>Custom Icons and Images</h2>
+      <hr/>
+      <p>
+        For any tag or metafield, you can provide a custom image, icon code (this theme uses icomoon), or color value to display alongside each value of the filter UI component. For example, if you have a "Color" filter option set, you can specify each color black, blue, green to a hex code, and your select-box will change accordingly.
+      </p>
+      <table>
+        <tr>
+          <td></td>
+          <td><b>Field Name</b> <br /> <small>(of metafield or tag)</small></td>
+          <td><b>Field Value</b> <br /> <small>(of collection page)</small></td>
+          <td><b>Field Value Label</b> <br /> <small>(showing on collection page)</small></td>
+          <td><b>Image</b><br /></td>
+          <td><b>Color</b><br /></td>
+          <td><b>Icon Code</b><br /><small>(From <a href="https://icomoon.io/app/">IcoMoon</a>)</small></td>
+        </tr>
+        <tr>
+          <td><small>1</small></td>
+          <td><input type="text" name="custom_value_1_field_name" size="12" /></td>
+          <td><input type="text" name="custom_value_1_1_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_1_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_1_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_1_1_color" /></td>
+          <td><input type="text" size="10" name="custom_value_1_1_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.2</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_2_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_2_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_2_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_1_2_color" /></td>
+          <td><input type="text" size="10" name="custom_value_1_2_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.3</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_3_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_3_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_3_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_1_3_color" /></td>
+          <td><input type="text" size="10" name="custom_value_1_3_icon_code"/>  </td>
+        </tr>
+        <tr>
+          <td><small>1.4</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_4_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_4_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_4_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_1_4_color" /></td>
+          <td><input type="text" size="10" name="custom_value_1_4_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.5</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_5_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_5_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_5_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_1_5_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_1_5_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.6</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_6_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_6_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_6_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_1_6_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_1_6_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.7</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_7_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_7_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_7_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_1_7_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_1_7_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.8</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_8_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_8_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_8_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_1_8_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_1_8_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>1.9</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_1_9_value" size="12" /></td>
+          <td><input type="text" name="custom_value_1_9_label" size="12" /></td>
+          <td><input type="file" name="custom_value_1_9_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_1_9_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_1_9_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>2</small></td>
+          <td><input type="text" name="custom_value_2_field_name" size="12" /></td>
+          <td><input type="text" name="custom_value_2_1_value" size="12" /></td>
+           <td><input type="text" name="custom_value_2_1_label" size="12" /></td>
+         <td><input type="file" name="custom_value_2_1_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_2_1_color" /></td>
+          <td><input type="text" size="10" name="custom_value_2_1_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>2.2</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_2_2_value" size="12" /></td>
+          <td><input type="text" name="custom_value_2_2_label" size="12" /></td>
+          <td><input type="file" name="custom_value_2_2_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_2_2_color" /></td>
+          <td><input type="text" size="10" name="custom_value_2_2_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>2.3</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_2_3_value" size="12" /></td>
+          <td><input type="text" name="custom_value_2_3_label" size="12" /></td>
+          <td><input type="file" name="custom_value_2_3_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_2_3_color" /></td>
+          <td><input type="text" size="10" name="custom_value_2_3_icon_code"/>  </td>
+        </tr>
+        <tr>
+          <td><small>2.4</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_2_4_value" size="12" /></td>
+          <td><input type="text" name="custom_value_2_4_label" size="12" /></td>
+          <td><input type="file" name="custom_value_2_4_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_2_4_color" /></td>
+          <td><input type="text" size="10" name="custom_value_2_4_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>2.5</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_2_5_value" size="12" /></td>
+          <td><input type="text" name="custom_value_2_5_label" size="12" /></td>
+          <td><input type="file" name="custom_value_2_5_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_2_5_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_2_5_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>3</small></td>
+          <td><input type="text" name="custom_value_3_field_name" size="12" /></td>
+          <td><input type="text" name="custom_value_3_1_value" size="12" /></td>
+          <td><input type="text" name="custom_value_3_1_label" size="12" /></td>
+          <td><input type="file" name="custom_value_3_1_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_3_1_color" /></td>
+          <td><input type="text" size="10" name="custom_value_3_1_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>3.2</small></td>   
+          <td></td>
+          <td><input type="text" name="custom_value_3_2_value" size="12" /></td>
+          <td><input type="text" name="custom_value_3_2_label" size="12" /></td>
+          <td><input type="file" name="custom_value_3_2_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_3_2_color" /></td>
+          <td><input type="text" size="10" name="custom_value_3_2_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>3.3</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_3_3_value" size="12" /></td>
+          <td><input type="text" name="custom_value_3_3_label" size="12" /></td>
+          <td><input type="file" name="custom_value_3_3_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_3_3_color" /></td>
+          <td><input type="text" size="10" name="custom_value_3_3_icon_code"/>  </td>
+        </tr>
+        <tr>
+          <td><small>3.4</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_3_4_value" size="12" /></td>
+          <td><input type="text" name="custom_value_3_4_label" size="12" /></td>
+          <td><input type="file" name="custom_value_3_4_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" size="7" name="custom_value_3_4_color" /></td>
+          <td><input type="text" size="10" name="custom_value_3_4_icon_code" />  </td>
+        </tr>
+        <tr>
+          <td><small>3.5</small></td>
+          <td></td>
+          <td><input type="text" name="custom_value_3_5_value" size="12" /></td>
+          <td><input type="text" name="custom_value_3_5_label" size="12" /></td>
+          <td><input type="file" name="custom_value_3_5_image.png" data-max-width="64" data-max-height="64" /></td>
+          <td><input type="text" class="color" name="custom_value_3_5_color" size="7" /></td>
+          <td><input type="text" size="10" name="custom_value_3_5_icon_code" />  </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</fieldset>

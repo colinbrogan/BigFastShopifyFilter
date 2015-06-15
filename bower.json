@@ -1,6 +1,6 @@
 {
   "name": "jquery-bigFastShopifyFilter",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "homepage": "http://cbrogan.info",
   "authors": [
     "Colin Brogan <colinbrogan@gmail.com>"
@@ -16,10 +16,10 @@
     "jquery-plugin",
   ],
   "license": "MIT",
-  "_release": "0.0.1",
+  "_release": "0.9.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.0.1",
+    "tag": "v0.9.0",
     "commit": ""
   },
   "_source": "git://github.com/colinbrogan/BigFastShopifyFilter.git",
