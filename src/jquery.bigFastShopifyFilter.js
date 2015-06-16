@@ -114,7 +114,7 @@
 					this.page = 1;
 					var $theElement = $(this.element);
 					this.filter();
-					console.log("something has been changed 2")
+					console.log("something has been changed 2");
 					if(this.all_loads_in === false) {
 						var doWithEachLoad = function(load) {
 							$theElement.trigger("loadReceived",load);
@@ -142,7 +142,7 @@
 								);	
 							}
 						};
-						console.log("something has been changed")
+						console.log("something has been changed");
 						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,done);
 					} else {
 					}
@@ -153,6 +153,14 @@
 					for(var handle in this.allReceived) {
 						/* leave determines whether or not a product matches all parameters and should be displayed, it begins as true. The idea being, if any current sort parameter doesn't match to the product, the product is discarded. This seems to me be the fastest means of narrowing down a listing */
 						var toFiltered = true;
+
+						// go ahead and filter out 41SCRAP and 41SHOP
+						if(this.allReceived[handle].metafields.Location !== undefined) {
+							if(this.allReceived[handle].metafields.Location.toLowerCase() == "41shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41scrap") {
+								toFiltered = false;
+							}
+						}
+
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
 							
@@ -160,6 +168,7 @@
 								for(var metafield in this.allReceived[handle].metafields) {
 									var current_metafield_value = this.allReceived[handle].metafields[metafield];
 									if(metafield === criteria) {
+
 										// When multiple url parameters are present,
 										// combine results
 										if(this.filter_criteria[criteria].constructor == Array) {
