@@ -255,7 +255,9 @@
 					if(this.allReceived == null) {
 						this.allReceived = {};
 					}
+					loop1:
 					for (var handle in load.products) {
+						loop2:
 						for (var metafield in load.products[handle].metafields) {
 							var metafield_value = load.products[handle].metafields[metafield];
 							// Make sure this is a filterable property
@@ -264,7 +266,7 @@
 								// repetitive calculations
 								if(this.filter_options.hasOwnProperty(metafield)) {
 									if(this.filter_options[metafield].hasOwnProperty(metafield_value)) {
-										break;
+										continue loop2;
 									} else {
 										this.filter_options[metafield][metafield_value] = {};
 									}
@@ -310,6 +312,7 @@
 										}
 							}
 						}
+						loop3:
 						for (var tag in load.products[handle].info.tags) {
 							var tagPreValue = load.products[handle].info.tags[tag];
 							if (tagPreValue.indexOf("kvp:") === 0) {
@@ -318,12 +321,11 @@
 								var field_value = splitFields[2];
 								// Make sure this is a filterable property
 								if(this.settings.tagfields.hasOwnProperty(field_name)) {
-
 									// Do not go further if this option already has a value, prevents 
 									// repetitive calculations
 									if(this.filter_options.hasOwnProperty(field_name)) {
 										if(this.filter_options[field_name].hasOwnProperty(field_value)) {
-											break;
+											continue loop3;
 										} else {
 											this.filter_options[field_name][field_value] = {};
 										}
@@ -354,13 +356,11 @@
 													}
 
 												} else {
-
 													// if field value not defined in theme settings,
 													// add value as title
 													this.filter_options[field_name][field_value].label = field_value;
 												}
 											} else {
-
 												// if field name not defined in theme settings,
 												// add value as title
 												this.filter_options[field_name][field_value].label = field_value;
@@ -385,20 +385,12 @@
 							var valueObject = this.filter_options[option][value];
 							var active_string = "";
 							// Wrap all strings passed into jquery.param in array literals
-							console.log('this.filter_criteria.hasOwnProperty( encodeURIComponent(option).replace("%20","+") )');
-							console.log(this.filter_criteria);
-							console.log(encodeURIComponent(option).replace(/%20/g,"+"));
 							if(this.filter_criteria.hasOwnProperty( encodeURIComponent(option).replace(/%20/g,"+") )) {
-								console.log('this.filter_criteria[encodeURIComponent(option).replace("%20","+")] === encodeURIComponent(value).replace("%20","+")');
-								console.log(this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")]+' === '+encodeURIComponent(value).replace(/%20/g,"+"));
 								if(this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")] === encodeURIComponent(value).replace(/%20/g,"+") ) {
 									active_string += "active";
 								} else if(this.filter_criteria[encodeURIComponent(option)].constructor === Array) {
 									for(var i in this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")]) {
 
-										console.log("in renderOptions for loop");
-										console.log('this.filter_criteria[encodeURIComponent(option)][i] === encodeURIComponent(value).replace("%20","+") ');
-										console.log(this.filter_criteria[encodeURIComponent(option)][i]+" === "+encodeURIComponent(value).replace(/%20/g,"+"));
 										if(this.filter_criteria[encodeURIComponent(option)][i] === encodeURIComponent(value).replace(/%20/g,"+") ) {
 											active_string += "active";
 										}
