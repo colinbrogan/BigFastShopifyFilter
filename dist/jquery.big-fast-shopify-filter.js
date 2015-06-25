@@ -168,6 +168,12 @@
 								toFiltered = false;
 							}
 						}
+						// go ahead and filter out Sold Products
+						if( (this.allReceived[handle].metafields.Condition == "S&D" || this.allReceived[handle].metafields.Condition == "NITB") && this.allReceived[handle].info.variants[0].inventory_quantity == 0) {
+							toFiltered = false;
+						} else if(this.allReceived[handle].metafields.Condition == undefined) {
+							toFiltered = false;
+						}
 
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
@@ -443,13 +449,17 @@
 								break;
 						}
 						var image_string = "";
-						if(product.info.vendor == "LG") {
-							image_string = '<img src="'+product.info.images[0].replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
+						var first_image = product.info.images[0];
+						if(first_image) {
+							if(product.info.vendor == "LG") {
+								image_string = '<img src="'+first_image.replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
 
-						} else if(product.info.vendor == "GE") {
-							image_string = '<img src="'+product.info.images[0].replace(".jpeg","_small.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
+							} else if(product.info.vendor == "GE") {
+								image_string = '<img src="'+first_image.replace(".jpeg","_small.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
 
+							}
 						}
+
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
 								'<div class="snapshot">',
