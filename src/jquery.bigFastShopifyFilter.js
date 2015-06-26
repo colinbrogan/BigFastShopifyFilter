@@ -640,6 +640,8 @@
 				},
 				infiniteScroll: function() {
 					var addTheStuff = function() {
+						$('ul.product-grid').removeClass("adding-products");
+
 						console.log("hit infiniteScroll");
 						this.page = this.page + 1;
 						var index = 0;
@@ -656,6 +658,7 @@
 					if(this.all_loads_in) {
 						addTheStuff();
 					} else {
+						$('ul.product-grid').addClass("adding-products");
 						$(this.element).on("loadsFinished",function(event) {
 							addTheStuff();
 						});
