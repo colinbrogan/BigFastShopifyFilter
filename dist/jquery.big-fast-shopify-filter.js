@@ -98,6 +98,9 @@
 							thePrototypeExtension.storeAllReceived(load);
 							thePrototypeExtension.filter();
 						});
+						$(this.element).on("loadsFinished",function(event) {
+							console.log("loadsFinished event fired");
+						});
 						
 				},
 				/********** instance variables  ****************/
@@ -128,7 +131,7 @@
 							$theElement.trigger("loadReceived",load);
 						};
 						var thePrototypeExtension = this;
-						var done = function(response) {
+						var whenDone = function(response) {
 							console.log("done fired here");
 							thePrototypeExtension.all_loads_in = true;
 							var filteredEmpty = true;
@@ -149,10 +152,11 @@
 									].join("")
 								);	
 							}
+							$theElement.trigger("loadsFinished");
 						};
-						console.log("something has been changed");
-						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,done);
-					} else {
+						console.log("whenDone variable name changed");
+						console.log(whenDone);
+						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,whenDone);
 					}
 				},
 				filter: function() {
@@ -169,7 +173,7 @@
 							}
 						}
 						// go ahead and filter out Sold Products
-						if( (this.allReceived[handle].metafields.Condition == "S&D" || this.allReceived[handle].metafields.Condition == "NITB") && this.allReceived[handle].info.variants[0].inventory_quantity == 0) {
+						if( (this.allReceived[handle].metafields.Condition == "S&D" || this.allReceived[handle].metafields.Condition == "NITB") && this.allReceived[handle].info.variants[0].inventory_quantity <= 0) {
 							toFiltered = false;
 						} else if(this.allReceived[handle].metafields.Condition == undefined) {
 							toFiltered = false;
@@ -557,14 +561,22 @@
 								if(this.queuedForScroll.length > 0) {
 									for(var i in this.queuedForScroll) {
 										var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
+										var didWhat = 0;
 										if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
+											didWhat = 1;
 											break;
 										} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[filterIndex].info[thePrototypeExtension.sort_property]) {
+											didWhat = 2;
 											this.queuedForScroll.splice(i - 1, 0, $productInsert);
 											break;
 										} else if(i == this.queuedForScroll.length - 1) {
+											didWhat = 3;
 											this.queuedForScroll.push($productInsert);
 											break;
+										}
+										if(handle == "hps18bthww-td848515") {
+											console.log("trickleToGrid hit "+handle);
+											console.log(didWhat);
 										}
 									}
 								} else {
@@ -572,6 +584,19 @@
 								}
 							}
 						}
+						if(filteredEmpty && this.all_loads_in) {
+							$('ul.product-grid').html([
+								"<li class='emtpy-message'>",
+									"Nothing matched your filter criteria.",
+									"<a href='#' class='clear-all'>",
+									"Clear All <i class='icon icon-close'></i>",
+									"</a>",
+								"</li>",
+								].join("")
+							);	
+						}
+					console.log("this.queuedForScroll");
+					console.log(this.queuedForScroll);
 
 
 					$(this.element).find("#options-go-here").empty();
