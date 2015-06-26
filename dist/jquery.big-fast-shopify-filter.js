@@ -152,7 +152,6 @@
 									].join("")
 								);	
 							}
-							$theElement.trigger("loadsFinished");
 						};
 						console.log("whenDone variable name changed");
 						console.log(whenDone);
@@ -257,7 +256,6 @@
 						}
 						
 					}
-					console.log("current this.filtered "+this.filtered.length+" items.");
 					console.log(this.filtered);
 					this.trickleToGrid();
 				},
@@ -584,6 +582,9 @@
 								}
 							}
 						}
+						if(this.all_loads_in) {
+							$(this.element).trigger("loadsFinished");
+						}
 						if(filteredEmpty && this.all_loads_in) {
 							$('ul.product-grid').html([
 								"<li class='emtpy-message'>",
@@ -647,17 +648,32 @@
 					});
 				},
 				infiniteScroll: function() {
-					console.log("hit infiniteScroll");
-					this.page = this.page + 1;
-					var index = 0;
-					console.log(this.settings.paginate);
-					console.log(this.queuedForScroll);
-					while(index < this.settings.paginate) {
-						console.log(index);
-						$('ul.product-grid').append( this.queuedForScroll.shift() );
-						index++;
+					var thePrototypeExtension = this;
+					var addTheStuff = function() {
+						$('ul.product-grid').removeClass("adding-products");
+
+						console.log("hit infiniteScroll");
+						thePrototypeExtension.page = thePrototypeExtension.page + 1;
+						var index = 0;
+						console.log(thePrototypeExtension.settings.paginate);
+						console.log(thePrototypeExtension.queuedForScroll);
+						while(index < thePrototypeExtension.settings.paginate) {
+							console.log(index);
+							$('ul.product-grid').append( thePrototypeExtension.queuedForScroll.shift() );
+							index++;
+						}
+						thePrototypeExtension.scroll_adding = false;
+					};
+
+					if(this.all_loads_in) {
+						addTheStuff();
+					} else {
+						$('ul.product-grid').addClass("adding-products");
+						$(this.element).on("loadsFinished",function(event) {
+							addTheStuff();
+						});
 					}
-					this.scroll_adding = false;
+
 				},
 				refresh: function() {
 					console.log("refresh");
