@@ -461,6 +461,19 @@
 
 							}
 						}
+						var locationHTML = "";
+						if(product.metafields.Location !== undefined) {
+							locationHTML = 	[
+										'<div class="spec-wrap">',
+											'<dt>LOCATION</dt>',
+											'<dd>'+product.metafields.Location+'</dd>',
+										'</div>'
+										].join("");
+						}
+						var titleString = product.info.title;
+						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
+							titleString = "LG "+titleString;
+						}
 
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
@@ -481,10 +494,7 @@
 											'<dt>CAPACITY</dt>',
 											'<dd>'+kvp["Total Capacity (cubic feet)"]+'</dd>',
 										'</div>',
-										'<div class="spec-wrap">',
-											'<dt>LOCATION</dt>',
-											'<dd>'+product.metafields.Location+'</dd>',
-										'</div>',
+										locationHTML,
 										'<div class="spec-wrap long">',
 											'<dt>DIMENSIONS</dt>',
 											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
@@ -504,7 +514,7 @@
 					                  	'</div>',
 					                '</div>',
 					            '</div>',
-					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+product.info.title+'</a></h4>',
+					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 					            '</li>',
 						].join("");
 					};

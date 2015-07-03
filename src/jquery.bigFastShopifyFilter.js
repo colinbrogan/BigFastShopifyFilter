@@ -462,6 +462,10 @@
 										'</div>'
 										].join("");
 						}
+						var titleString = product.info.title;
+						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
+							titleString = "LG "+titleString;
+						}
 
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
@@ -502,7 +506,7 @@
 					                  	'</div>',
 					                '</div>',
 					            '</div>',
-					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+product.info.title+'</a></h4>',
+					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 					            '</li>',
 						].join("");
 					};
