@@ -470,6 +470,24 @@
 										'</div>'
 										].join("");
 						}
+						var capacityHTML = "";
+						if("Total Capacity (cubic feet)" in kvp) {
+							capacityHTML = [
+								'<div class="spec-wrap">',
+									'<dt>CAPACITY</dt>',
+									'<dd>'+kvp["Total Capacity (cubic feet)"]+'</dd>',
+								'</div>',
+							].join("");
+						}
+						var dBAHTML = "";
+						if("dBA" in kvp) {
+							capacityHTML = [
+								'<div class="spec-wrap">',
+									'<dt>Decibals</dt>',
+									'<dd>'+kvp["dBA"]+'</dd>',
+								'</div>',
+							].join("");
+						}
 						var titleString = product.info.title;
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
@@ -490,11 +508,9 @@
 											'<dt>SERIAL</dt>',
 											'<dd>'+product.info.handle.split('-')[1]+'</dd>',
 										'</div>',
-										'<div class="spec-wrap">',
-											'<dt>CAPACITY</dt>',
-											'<dd>'+kvp["Total Capacity (cubic feet)"]+'</dd>',
-										'</div>',
+										capacityHTML,
 										locationHTML,
+										dBAHTML,
 										'<div class="spec-wrap long">',
 											'<dt>DIMENSIONS</dt>',
 											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
