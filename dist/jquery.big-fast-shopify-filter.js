@@ -571,10 +571,11 @@
 						};
 					};
 					var filteredEmpty = true;
+					var $productGrid = $("ul.product-grid").clone();
+
 						for(var handle in this.filtered) {
 							filteredEmpty = false;
 							var $productInsert = $(renderTemplate(this.filtered[handle])).attr('data-filter-index',handle);
-							var $productGrid = $("ul.product-grid");
 							// Choose where to put the product
 							var cap = this.settings.paginate*this.page;
 							var results = sortedAddToGrid($productGrid,$productInsert,cap);
@@ -598,15 +599,28 @@
 											this.queuedForScroll.push($productInsert);
 											break;
 										}
-										if(handle == "hps18bthww-td848515") {
-											console.log("trickleToGrid hit "+handle);
-											console.log(didWhat);
-										}
 									}
 								} else {
 									this.queuedForScroll.push($productInsert);
 								}
 							}
+						}
+						$("ul.product-grid").replaceWith($productGrid);
+						if(this.queuedForScroll.length > 0) {
+							console.log("AAAAARRRRRRGGGGGGGHHHHHH!!!!!");
+							var resultsNum = this.settings.paginate;
+							if(this.queuedForScroll.length < resultsNum) {
+								resultsNum = this.queuedForScroll.length;
+							}
+							var $showResults = $([
+									'<div class="show-results">',
+										'<button class="btn" id="add-results">',
+											'Show '+resultsNum+' more results.',
+										'</button>',
+									'</div>'
+								].join("")
+							);
+							$('ul.product-grid').after($showResults);
 						}
 						if(this.all_loads_in) {
 							$(this.element).trigger("loadsFinished");
