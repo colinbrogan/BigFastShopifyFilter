@@ -425,6 +425,7 @@
 					return this.allReceived;
 				},
 				trickleToGrid: function() {
+					$(".show-results").remove();
 					var theCollectionHandle = this.collection_handle;
 					var renderTemplate = function(product) {
 						var kvp = {};
@@ -606,22 +607,7 @@
 							}
 						}
 						$("ul.product-grid").replaceWith($productGrid);
-						if(this.queuedForScroll.length > 0) {
-							console.log("AAAAARRRRRRGGGGGGGHHHHHH!!!!!");
-							var resultsNum = this.settings.paginate;
-							if(this.queuedForScroll.length < resultsNum) {
-								resultsNum = this.queuedForScroll.length;
-							}
-							var $showResults = $([
-									'<div class="show-results">',
-										'<button class="btn" id="add-results">',
-											'Show '+resultsNum+' more results.',
-										'</button>',
-									'</div>'
-								].join("")
-							);
-							$('ul.product-grid').after($showResults);
-						}
+						this.addResultsButton();
 						if(this.all_loads_in) {
 							$(this.element).trigger("loadsFinished");
 						}
@@ -644,6 +630,41 @@
 					$(this.element).find("#options-go-here").append(this.renderOptions());
 					console.log("renderOptions appended");
 					this.registerActions();
+				},
+				addResultsButton: function() {
+						if(this.queuedForScroll.length > 0) {
+							var resultsNum = this.settings.paginate;
+							if(this.queuedForScroll.length < resultsNum) {
+								resultsNum = this.queuedForScroll.length;
+							}
+							var $showResults = $([
+									'<div class="show-results">',
+										'<button class="btn btn-purple" id="add-results">',
+											'Show '+resultsNum+' more results.',
+										'</button>',
+									'</div>'
+								].join("")
+							);
+							if($(".show-results").length > 0) {
+								$(".show-results").replaceWith($showResults);
+							} else {
+								$('ul.product-grid').after($showResults);
+							}
+							var thePrototypeExtension = this;
+							$('#add-results').click(function(event) {
+
+								thePrototypeExtension.infiniteScroll();
+							});
+						} else {
+							$(".show-results").replaceWith([
+									'<div class="show-results">',
+										'<button class="btn disabled" id="add-results">',
+											'You\'ve reached the end',
+										'</button>',
+									'</div>'
+								].join("")
+							);
+						}
 				},
 				registerActions: function() {
 					$("ul.tick-boxes button").click(function(event) {
@@ -676,6 +697,11 @@
 						$.address.queryString("");
 					});
 					var thePrototypeExtension = this;
+
+					$('#add-results').click(function(event) {
+						thePrototypeExtension.infiniteScroll();
+					});
+/*					
 					$(window).scroll(function() {
 						var marginFromBottom = 50;
 						console.log(thePrototypeExtension.scroll_adding);
@@ -686,6 +712,7 @@
 							thePrototypeExtension.infiniteScroll();
 						}
 					});
+*/
 				},
 				infiniteScroll: function() {
 					var thePrototypeExtension = this;
@@ -713,7 +740,7 @@
 							addTheStuff();
 						});
 					}
-
+					this.addResultsButton();
 				},
 				refresh: function() {
 					console.log("refresh");
