@@ -26,7 +26,7 @@
 				defaults =  {
 					filter_criteria: null,
 					collection_handle: null,
-					paginate: 20,
+					paginate: 30,
 					key_value_overrides: null,
 					metafields: null,
 					tagfields: null,
@@ -670,11 +670,8 @@
 					$("ul.tick-boxes button").click(function(event) {
 						event.preventDefault();
 
-						if( $(this).hasClass("active") ) {
-							$(this).removeClass('active');
-						} else {
-							$(this).addClass("active");
-						}
+						$(this).toggleClass("active");
+
 						// wipe out previous hashURL's
 						var new_values = {};
 						$(this).parents('#options-go-here').find('ul.tick-boxes button.active').each(function() {
