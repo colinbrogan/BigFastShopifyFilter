@@ -447,10 +447,10 @@
 						var first_image = product.info.images[0];
 						if(first_image) {
 							if(product.info.vendor == "LG") {
-								image_string = '<img src="'+first_image.replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
+								image_string = '<img src="'+first_image.replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
 
-							} else if(product.info.vendor == "GE") {
-								image_string = '<img src="'+first_image.replace(".jpeg","_small.jpeg")+'" class="'+product.info.vendor+'" alt="" />';
+							} else {
+								image_string = '<img src="'+first_image.replace(".jpeg","_small.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
 
 							}
 						}
@@ -481,6 +481,33 @@
 								'</div>',
 							].join("");
 						}
+						var dBAHTML = "";
+						if("dBA" in kvp) {
+							capacityHTML = [
+								'<div class="spec-wrap">',
+									'<dt>Decibals</dt>',
+									'<dd>'+kvp["dBA"]+'</dd>',
+								'</div>',
+							].join("");
+						}
+						var sonesHTML = "";
+						if("Sones" in kvp) {
+							sonesHTML = [
+								'<div class="spec-wrap">',
+									'<dt>Sones</dt>',
+									'<dd>'+kvp["Sones"]+'</dd>',
+								'</div>',
+							].join("");
+						}
+						var cfmHTML = "";
+						if("CFM" in kvp) {
+							cfmHTML = [
+								'<div class="spec-wrap">',
+									'<dt>CFM</dt>',
+									'<dd>'+kvp["CFM"]+'</dd>',
+								'</div>',
+							].join("");
+						}
 						var titleString = product.info.title;
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
@@ -504,6 +531,8 @@
 										capacityHTML,
 										locationHTML,
 										dBAHTML,
+										cfmHTML,
+										sonesHTML,
 										'<div class="spec-wrap long">',
 											'<dt>DIMENSIONS</dt>',
 											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
