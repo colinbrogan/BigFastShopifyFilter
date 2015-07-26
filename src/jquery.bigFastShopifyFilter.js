@@ -474,16 +474,7 @@
 						}
 						var dBAHTML = "";
 						if("dBA" in kvp) {
-							capacityHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Decibals</dt>',
-									'<dd>'+kvp["dBA"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var dBAHTML = "";
-						if("dBA" in kvp) {
-							capacityHTML = [
+							dBAHTML = [
 								'<div class="spec-wrap">',
 									'<dt>Decibals</dt>',
 									'<dd>'+kvp["dBA"]+'</dd>',
