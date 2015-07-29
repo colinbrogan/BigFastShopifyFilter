@@ -94,12 +94,15 @@
 						/****** custom events go here ******/
 						var thePrototypeExtension = this;
 						$(this.element).on("loadReceived",function(event,load) {
-							console.log("loadReceived");
 							thePrototypeExtension.storeAllReceived(load);
-							thePrototypeExtension.filter();
+							if((load.page - 1) % 7 == 0) {
+								thePrototypeExtension.filter();
+								thePrototypeExtension.buildOptions();
+							}
 						});
 						$(this.element).on("loadsFinished",function(event) {
-							console.log("loadsFinished event fired");
+								thePrototypeExtension.buildOptions();
+								$("#options-go-here").removeClass("loading");
 						});
 						
 				},
@@ -119,28 +122,24 @@
 				/********** public Methods ***************/
 				go: function(params) {
 					$(this.element).find("ul.product-grid").empty();
-					console.log("go fired");
 					this.queuedForScroll = [];
 					this.filter_criteria = params;
 					this.page = 1;
 					var $theElement = $(this.element);
 					this.filter();
-					console.log("something has been changed 2");
+					this.buildOptions();
 					if(this.all_loads_in === false) {
 						var doWithEachLoad = function(load) {
 							$theElement.trigger("loadReceived",load);
 						};
 						var thePrototypeExtension = this;
 						var whenDone = function(response) {
-							console.log("done fired here");
 							thePrototypeExtension.all_loads_in = true;
 							var filteredEmpty = true;
 							for(var i in thePrototypeExtension.filtered) {
 								filteredEmpty = false;
 								break;
 							}
-							console.log("filteredEmpty");
-							console.log(filteredEmpty);
 							if(filteredEmpty) {
 								$('ul.product-grid').html([
 									"<li class='emtpy-message'>",
@@ -152,13 +151,14 @@
 									].join("")
 								);	
 							}
+							$theElement.trigger("loadsFinished",response);
+
 						};
-						console.log("whenDone variable name changed");
-						console.log(whenDone);
 						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,whenDone);
 					}
 				},
 				filter: function() {
+					$(this.element).find("ul.product-grid").addClass("loading");
 					this.filtered = {};
 					/* loop through every product of this collection */
 					for(var handle in this.allReceived) {
@@ -256,7 +256,6 @@
 						}
 						
 					}
-					console.log(this.filtered);
 					this.trickleToGrid();
 				},
 				storeAllReceived: function(load) {
@@ -379,11 +378,8 @@
 						}
 						this.allReceived[handle] = load.products[handle];
 					}
-					console.log('Current allReceived '+this.allReceived.length+" items.");
-					console.log(this.allReceived);
 				},
 				renderOptions: function() {
-					console.log(this.filter_options);
 					var return_string = "";
 
 					for(var option in this.filter_options) {
@@ -420,6 +416,12 @@
 						return_string += "</ul>";
 					}
 					return return_string;
+				},
+				buildOptions: function() {
+					console.log("Inserting Options");
+					$(this.element).find("#options-go-here").empty();
+					$(this.element).find("#options-go-here").addClass("loading").append(this.renderOptions());
+					this.registerActions();
 				},
 				getAllReceived: function() {
 					return this.allReceived;
@@ -628,6 +630,7 @@
 						}
 						$("ul.product-grid").replaceWith($productGrid);
 						this.addResultsButton();
+						$(this.element).find("ul.product-grid").removeClass("loading");
 						if(this.all_loads_in) {
 							$(this.element).trigger("loadsFinished");
 						}
@@ -642,14 +645,7 @@
 								].join("")
 							);	
 						}
-					console.log("this.queuedForScroll");
-					console.log(this.queuedForScroll);
 
-
-					$(this.element).find("#options-go-here").empty();
-					$(this.element).find("#options-go-here").append(this.renderOptions());
-					console.log("renderOptions appended");
-					this.registerActions();
 				},
 				addResultsButton: function() {
 						if(this.queuedForScroll.length > 0) {
@@ -689,6 +685,7 @@
 				registerActions: function() {
 					$("ul.tick-boxes button").click(function(event) {
 						event.preventDefault();
+						$(this.element).find("ul.product-grid").addClass("loading");
 
 						$(this).toggleClass("active");
 
@@ -704,7 +701,6 @@
 						});
 
 						var new_query_string = jQuery.param( new_values, true);
-						console.log(new_query_string);
 						$.address.queryString(new_query_string);
 
 
@@ -736,13 +732,9 @@
 					var addTheStuff = function() {
 						$('ul.product-grid').removeClass("adding-products");
 
-						console.log("hit infiniteScroll");
 						thePrototypeExtension.page = thePrototypeExtension.page + 1;
 						var index = 0;
-						console.log(thePrototypeExtension.settings.paginate);
-						console.log(thePrototypeExtension.queuedForScroll);
 						while(index < thePrototypeExtension.settings.paginate) {
-							console.log(index);
 							$('ul.product-grid').append( thePrototypeExtension.queuedForScroll.shift() );
 							index++;
 						}
@@ -761,7 +753,6 @@
 					this.addResultsButton();
 				},
 				refresh: function() {
-					console.log("refresh");
 					somePrivateMethod("refresh");
 				},
 
