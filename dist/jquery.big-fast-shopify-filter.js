@@ -749,14 +749,15 @@
 						thePrototypeExtension.scroll_adding = false;
 					};
 
-					if(this.all_loads_in) {
+/*					if(this.all_loads_in) {		*/
 						addTheStuff();
-					} else {
+/*					} else {
 						$('ul.product-grid').addClass("adding-products");
 						$(this.element).on("loadsFinished",function(event) {
 							addTheStuff();
 						});
 					}
+*/
 					this.addResultsButton();
 				},
 				refresh: function() {
