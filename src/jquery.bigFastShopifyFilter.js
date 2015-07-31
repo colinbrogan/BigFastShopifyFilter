@@ -86,6 +86,7 @@
 						/****** custom events go here ******/
 						var thePrototypeExtension = this;
 						$(this.element).on("loadReceived",function(event,load) {
+							console.log("A load was received");
 							thePrototypeExtension.storeAllReceived(load);
 							if((load.page - 1) % 7 == 0) {
 								thePrototypeExtension.filter();
@@ -93,8 +94,12 @@
 							}
 						});
 						$(this.element).on("loadsFinished",function(event) {
-								thePrototypeExtension.buildOptions();
-								$("#options-go-here").removeClass("loading");
+							console.log("Finished all Loads");
+							thePrototypeExtension.buildOptions();
+							$("#options-go-here").removeClass("loading");
+						});
+						$(this.element).on("filterOptionsChanged",function(event) {
+							thePrototypeExtension.setActiveOptionsToHash();
 						});
 						
 				},
@@ -116,7 +121,6 @@
 					$(this.element).find("ul.product-grid").empty();
 					this.queuedForScroll = [];
 					this.filter_criteria = params;
-					this.page = 1;
 					var $theElement = $(this.element);
 					this.filter();
 					this.buildOptions();
@@ -148,6 +152,13 @@
 						};
 						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,whenDone);
 					}
+				},
+				fastReload: function(params) {
+					$(this.element).find("ul.product-grid").empty();
+					this.queuedForScroll = [];
+					this.filter_criteria = params;
+					var $theElement = $(this.element);
+					this.filter();
 				},
 				filter: function() {
 					$(this.element).find("ul.product-grid").addClass("loading");
@@ -623,9 +634,6 @@
 						$("ul.product-grid").replaceWith($productGrid);
 						this.addResultsButton();
 						$(this.element).find("ul.product-grid").removeClass("loading");
-						if(this.all_loads_in) {
-							$(this.element).trigger("loadsFinished");
-						}
 						if(filteredEmpty && this.all_loads_in) {
 							$('ul.product-grid').html([
 								"<li class='emtpy-message'>",
@@ -675,33 +683,23 @@
 						}
 				},
 				registerActions: function() {
+					var thePrototypeExtension = this;
+					var $theElement = $(this.element);
 					$("ul.tick-boxes button").click(function(event) {
 						event.preventDefault();
-						$(this.element).find("ul.product-grid").addClass("loading");
-
+						var showLoading = jQuery.Deferred();
+						$("ul.product-grid").addClass("loading");
 						$(this).toggleClass("active");
-
-						// wipe out previous hashURL's
-						var new_values = {};
-						$(this).parents('#options-go-here').find('ul.tick-boxes button.active').each(function() {
-							var field_name = $(this).attr("name");
-							var field_value = $(this).attr("value");
-							if(new_values[field_name] == undefined) {
-								new_values[field_name] = [];
-							}
-							new_values[field_name].push(field_value);
+						showLoading.resolve();
+						$.when(showLoading).done(function() {
+							$theElement.trigger("filterOptionsChanged");
 						});
-
-						var new_query_string = jQuery.param( new_values, true);
-						$.address.queryString(new_query_string);
-
 
 					});
 					$("a.clear-all").click(function(event) {
 						event.preventDefault();
 						$.address.queryString("");
 					});
-					var thePrototypeExtension = this;
 
 					$('#add-results').click(function(event) {
 						thePrototypeExtension.infiniteScroll();
@@ -718,6 +716,23 @@
 						}
 					});
 */
+				},
+				setActiveOptionsToHash: function() {
+					// wipe out previous hashURL's
+		
+					var new_values = {};
+					$('#options-go-here').find('ul.tick-boxes button.active').each(function() {
+							var field_name = $(this).attr("name");
+							var field_value = $(this).attr("value");
+							if(new_values[field_name] == undefined) {
+								new_values[field_name] = [];
+							}
+							new_values[field_name].push(field_value);
+					});
+
+					var new_query_string = jQuery.param( new_values, true);
+					$.address.queryString(new_query_string);
+
 				},
 				infiniteScroll: function() {
 					var thePrototypeExtension = this;
