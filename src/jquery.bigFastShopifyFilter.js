@@ -689,11 +689,9 @@
 						event.preventDefault();
 						var showLoading = jQuery.Deferred();
 						$("ul.product-grid").addClass("loading");
-						$(this).toggleClass("active");
-						showLoading.resolve();
-						$.when(showLoading).done(function() {
-							$theElement.trigger("filterOptionsChanged");
-						});
+				        $(this).toggleClass("active").fadeIn(10, function () {
+				            $theElement.trigger("filterOptionsChanged");
+				        });
 
 					});
 					$("a.clear-all").click(function(event) {
