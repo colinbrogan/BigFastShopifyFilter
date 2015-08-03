@@ -218,13 +218,17 @@
 								}
 								
 							} else if(this.settings.tagfields.hasOwnProperty(criteria)) {
+
+								// create a variable which remains false if a filter criteria is found nowhere in a product's tag
+								var snagged_tag = false;
 								for (var tag in this.allReceived[handle].info.tags) {
 									var tagPreValue = this.allReceived[handle].info.tags[tag];
 									if (tagPreValue.indexOf("kvp:"+criteria) === 0) {
+										snagged_tag = true;
 										var splitFields = tagPreValue.split(":");
 										var field_name = splitFields[1];
 										var field_value = splitFields[2];
-										if(field_name === criteria) {		
+										if(field_name === criteria) {	
 											if(this.filter_criteria[criteria].constructor == Array) {
 												var somethingMatched = false;
 												for(var i in this.filter_criteria[criteria]) {
@@ -242,15 +246,31 @@
 											// then filter on that parameter only
 											} else {
 												var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
+												if(criteria == "Counter-Depth") {
+													console.log("made it here 2");
+													console.log(field_name);
+													console.log(field_value);
+													console.log(current_criteria_value);
+												}
 												if(current_criteria_value === field_value) {
 													/* do nothing */
+													if(criteria == "Counter-Depth") {
+														console.log("do nothing");
+													}
 												} else {
+													if(criteria == "Counter-Depth") {
+														console.log("filter out");
+													}
 													toFiltered = false;
 												}
 											}
 										}
 
 									}
+								}
+								if(snagged_tag == false) {
+									console.log("snagged_tag is false");
+									toFiltered = false;
 								}
 							}
 						}
@@ -259,6 +279,10 @@
 						}
 						
 					}
+					console.log("this.filter_criteria");
+					console.log(this.filter_criteria);
+					console.log("this.filtered");
+					console.log(this.filtered);
 					this.trickleToGrid();
 				},
 				storeAllReceived: function(load) {
@@ -687,11 +711,9 @@
 					var $theElement = $(this.element);
 					$("ul.tick-boxes button").click(function(event) {
 						event.preventDefault();
-						var showLoading = jQuery.Deferred();
 						$("ul.product-grid").addClass("loading");
-				        $(this).toggleClass("active").fadeIn(10, function () {
-				            $theElement.trigger("filterOptionsChanged");
-				        });
+				        $(this).toggleClass("active");
+				        setTimeout(function() { $theElement.trigger("filterOptionsChanged"); }, 200);
 
 					});
 					$("a.clear-all").click(function(event) {
