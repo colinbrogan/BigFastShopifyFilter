@@ -96,6 +96,8 @@
 						$(this.element).on("loadsFinished",function(event) {
 							console.log("Finished all Loads");
 							thePrototypeExtension.buildOptions();
+							thePrototypeExtension.filter();
+
 							$("#options-go-here").removeClass("loading");
 						});
 						$(this.element).on("filterOptionsChanged",function(event) {
