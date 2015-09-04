@@ -551,8 +551,16 @@
 							titleString = "LG "+titleString;
 						}
 
+						var markDownClass = "";
+						for(var i in product.info.tags) {
+							if(product.info.tags[i] == "Markdown") {
+								markDownClass = "clearance";
+								break;
+							}
+						}
+
 						return [
-							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+"'>",
+							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+"'>",
 								'<div class="snapshot">',
 									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image">',
 										image_string,
