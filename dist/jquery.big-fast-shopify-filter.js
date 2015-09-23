@@ -79,6 +79,7 @@
 						// and this.settings
 						// you can add more functions like the one below and
 						// call them like so: this.yourOtherFunction(this.element, this.settings).
+						// this.settings.type.enable
 
 						if($(this.element).data("collection") !== undefined) {
 							this.setCollectionHandle($(this.element).data("collection"));
@@ -275,20 +276,30 @@
 												}
 											}
 										}
-
 									}
 								}
 								if(snagged_tag == false) {
 									console.log("snagged_tag is false");
 									toFiltered = false;
 								}
+							} else if(this.settings.type.enable && criteria == "Type") {
+								var criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
+								if(this.allReceived[handle].info.type == criteria_value) {
+									/* do nothing */
+								} else {
+									toFiltered = false;
+								}
+								console.log("TYYYYYPPPPEEE!!!!");
 							}
 						}
+
 						if(toFiltered) {
 							this.filtered[handle] = this.allReceived[handle];
 						}
 						
 					}
+					console.log("this.settings.type.enable");
+					console.log(this.settings.type.enable);
 					console.log("this.filter_criteria");
 					console.log(this.filter_criteria);
 					console.log("this.filtered");
@@ -412,6 +423,18 @@
 
 								}
 							}
+						}
+						console.log("this.settings.type.enable");
+						console.log(this.settings.type.enable);
+						if(this.settings.type.enable) {
+							console.log("TYYYYYPPPPEEE!!!!");
+							if(this.filter_options["Type"] === undefined) {
+								this.filter_options["Type"] = {};
+							} else {
+								this.filter_options["Type"][load.products[handle].info.type] = {};
+								this.filter_options["Type"][load.products[handle].info.type].label = load.products[handle].info.type;
+							}
+							
 						}
 						this.allReceived[handle] = load.products[handle];
 					}
