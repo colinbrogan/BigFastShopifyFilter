@@ -439,6 +439,10 @@
 								}
 							}
 							var background_string = "";
+							if(value == "Clearance") {
+								valueObject.color = "#a56060";
+								active_string += " white-tick";
+							}
 							if(valueObject.color) {
 								background_string += "background-color: "+valueObject.color+"; ";
 								if(parseInt(valueObject.color.replace("#",""),16) < 10329501) {
