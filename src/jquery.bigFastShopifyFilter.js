@@ -275,15 +275,27 @@
 									toFiltered = false;
 								}
 							} else if(this.settings.type.enable && criteria == "Type") {
-								var criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
-								if(this.allReceived[handle].info.type == criteria_value) {
-									/* do nothing */
-									console.log(99999);
+								if(this.filter_criteria[criteria].constructor == Array) { 
+									var somethingMatched = false;
+									for(var i in this.filter_criteria[criteria]) {
+										var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria][i].replace(/\+/g, '%20'));
+										if(this.allReceived[handle].info.type === current_criteria_value) {
+											somethingMatched = true;
+										}
+									}
+									if(somethingMatched) {
+										/* do nothing */
+									} else {
+										toFiltered = false;
+									}	
 								} else {
-									toFiltered = false;
-									console.log(00000);
+									var criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
+									if(this.allReceived[handle].info.type == criteria_value) {
+										/* do nothing */
+									} else {
+										toFiltered = false;
+									}
 								}
-								console.log("TYYYYYPPPPEEE!!!!");
 							}
 						}
 
@@ -292,8 +304,6 @@
 						}
 						
 					}
-					console.log("this.settings.type.enable");
-					console.log(this.settings.type.enable);
 					console.log("this.filter_criteria");
 					console.log(this.filter_criteria);
 					console.log("this.filtered");
@@ -418,10 +428,8 @@
 								}
 							}
 						}
-						console.log("this.settings.type.enable");
-						console.log(this.settings.type.enable);
+
 						if(this.settings.type.enable) {
-							console.log("TYYYYYPPPPEEE!!!!");
 							if(this.filter_options["Type"] === undefined) {
 								this.filter_options["Type"] = {};
 							} else {
@@ -631,23 +639,23 @@
 						if($productHouser.find("li").length > 0) {
 							var pg_loop = function(pg_index) {
 								var compare_handle = $(this).attr('data-filter-index');
-								if(thePrototypeExtension.filtered[compare_handle].info.id == thePrototypeExtension.filtered[handle].info.id) {
-									placed_item = true;
-									return false;
-								} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[compare_handle].info[thePrototypeExtension.sort_property]) {
-									$(this).before($productInsert);
-									if($productHouser.find("li").length > cap) {
-										var $stray_item = $productHouser.find("li:last-child");
-										add_to_next = $stray_item.clone();
-										$stray_item.remove();
+									if(thePrototypeExtension.filtered[compare_handle].info.id == thePrototypeExtension.filtered[handle].info.id) {
+										placed_item = true;
+										return false;
+									} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[compare_handle].info[thePrototypeExtension.sort_property]) {
+										$(this).before($productInsert);
+										if($productHouser.find("li").length > cap) {
+											var $stray_item = $productHouser.find("li:last-child");
+											add_to_next = $stray_item.clone();
+											$stray_item.remove();
+										}
+										placed_item = true;
+										return false;
+									} else if(pg_index == $productHouser.find("li").length - 1 && pg_index < (cap - 1)) {
+										$(this).after($productInsert);
+										placed_item = true;
+										return false;
 									}
-									placed_item = true;
-									return false;
-								} else if(pg_index == $productHouser.find("li").length - 1 && pg_index < (cap - 1)) {
-									$(this).after($productInsert);
-									placed_item = true;
-									return false;
-								}
 							};
 							$productHouser.find("li").each(pg_loop);
 						} else {
@@ -661,7 +669,7 @@
 					};
 					var filteredEmpty = true;
 					var $productGrid = $("ul.product-grid").clone();
-
+					$productGrid.empty();
 						for(var handle in this.filtered) {
 							filteredEmpty = false;
 							var $productInsert = $(renderTemplate(this.filtered[handle])).attr('data-filter-index',handle);
