@@ -519,19 +519,31 @@
 								condition = "Closeout";
 								break;
 						}
+						var sdWithImagesClass = "";
+						var last_image = "";
+						if(product.info.images.length > 3 && condition == "Scratch & Dent") {
+							sdWithImagesClass = "sd-with-images";
+							if(product.info.images[product.info.images.length - 1]) {
+								if(product.info.vendor == "LG") {
+									last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_large.jpeg");
+								} else {
+									last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_medium.jpeg");
+								}
+							}
+						}
 						var image_string = "";
 						var first_image = product.info.images[0];
 						if(first_image) {
 							if(product.info.vendor == "LG") {
-								image_string = '<img src="'+first_image.replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
+								image_string = '<img src="'+first_image.replace(".jpeg","_large.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
 
 							} else {
-								image_string = '<img src="'+first_image.replace(".jpeg","_small.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
+								image_string = '<img src="'+first_image.replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
 
 							}
 						}
 						var locationHTML = "";
-						if(product.metafields.Location !== undefined) {
+/*						if(product.metafields.Location !== undefined) {
 							locationHTML = 	[
 										'<div class="spec-wrap">',
 											'<dt>LOCATION</dt>',
@@ -539,6 +551,7 @@
 										'</div>'
 										].join("");
 						}
+*/
 						var capacityHTML = "";
 						if("Total Capacity (cubic feet)" in kvp) {
 							capacityHTML = [
@@ -589,12 +602,15 @@
 						}
 
 						return [
-							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+"'>",
+							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+" "+sdWithImagesClass+"'>",
 								'<div class="snapshot">',
-									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image">',
+									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image" data-last-image="'+last_image+'">',
 										image_string,
 									'</a>',
+								'</div>',
+					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 									'<dl class="specs">',
+/*
 										'<div class="spec-wrap">',
 											'<dt>MODEL</dt>',
 											'<dd>'+product.info.handle.split('-')[0]+'</dd>',
@@ -603,17 +619,18 @@
 											'<dt>SERIAL</dt>',
 											'<dd>'+product.info.handle.split('-')[1]+'</dd>',
 										'</div>',
+*/
 										capacityHTML,
 										locationHTML,
 										dBAHTML,
 										cfmHTML,
 										sonesHTML,
-										'<div class="spec-wrap long">',
+/*										'<div class="spec-wrap long">',
 											'<dt>DIMENSIONS</dt>',
 											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
 										'</div>',
+*/
 									'</dl>',
-								'</div>',
 					            '<div class="price-condition">',
 					                '<dl class="price">',
 					                	'<dt><span hidden>Price</span></dt>',
@@ -627,8 +644,7 @@
 					                  	'</div>',
 					                '</div>',
 					            '</div>',
-					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
-					            '</li>',
+					         '</li>',
 						].join("");
 					};
 /*					var pGridIndex = 0;				*/
