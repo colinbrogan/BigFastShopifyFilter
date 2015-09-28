@@ -318,6 +318,7 @@
 					for (var handle in load.products) {
 						loop2:
 						for (var metafield in load.products[handle].metafields) {
+
 							var metafield_value = load.products[handle].metafields[metafield];
 							// Make sure this is a filterable property
 							if(this.settings.metafields.hasOwnProperty(metafield)) {
@@ -443,9 +444,14 @@
 				},
 				renderOptions: function() {
 					var return_string = "";
-
 					for(var option in this.filter_options) {
-						return_string += "<h3>"+option.toUpperCase()+"</h3>";
+						if(option.toUpperCase()=="CONDITION"||option.toUpperCase()=="KIND"||option.toUpperCase()=="TYPE"||option.toUpperCase()=="TRUCKLOAD") {
+							return_string += "<h3 class='active'>"+option.toUpperCase()+"</h3>";
+						} else if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option).replace(/%20/g,"+"))) {
+							return_string += "<h3 class='active'>"+option.toUpperCase()+"</h3>";
+						} else {
+							return_string += "<h3>"+option.toUpperCase()+"</h3>";
+						}
 						return_string += "<ul class=\"tick-boxes\">";
 						for(var value in this.filter_options[option]) {
 							var valueObject = this.filter_options[option][value];
@@ -454,7 +460,7 @@
 							if(this.filter_criteria.hasOwnProperty( encodeURIComponent(option).replace(/%20/g,"+") )) {
 								if(this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")] === encodeURIComponent(value).replace(/%20/g,"+") ) {
 									active_string += "active";
-								} else if(this.filter_criteria[encodeURIComponent(option)].constructor === Array) {
+								} else if(this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")].constructor === Array) {
 									for(var i in this.filter_criteria[encodeURIComponent(option).replace(/%20/g,"+")]) {
 
 										if(this.filter_criteria[encodeURIComponent(option)][i] === encodeURIComponent(value).replace(/%20/g,"+") ) {
@@ -487,6 +493,21 @@
 					console.log("Inserting Options");
 					$(this.element).find("#options-go-here").empty();
 					$(this.element).find("#options-go-here").addClass("loading").append(this.renderOptions());
+					var $sd_images_button = $('<button class="sd_images">Compare S&D</button>');
+					$sd_images_button.click(function(event) {
+						$('ul.product-grid li.sd-with-images').each(function() {
+						        var sd_image = $(this).find("a.product-image").data("last-image");
+						        if(sd_image) {
+						            $(this).find("a.product-image img").attr("src",sd_image);
+						            $(this).addClass("sd-image-activated");
+						        }
+						});
+					});
+					$(this.element).find("#options-go-here").append($sd_images_button);
+					$(this.element).find("#options-go-here h3").unbind("click");
+					$(this.element).find("#options-go-here h3").click(function() {
+						$(this).toggleClass("active");
+					});
 					this.registerActions();
 				},
 				getAllReceived: function() {
@@ -588,6 +609,24 @@
 								'</div>',
 							].join("");
 						}
+						var widthHTML = "";
+						if("Width" in kvp) {
+							widthHTML = [
+								'<div class="spec-wrap">',
+									'<dt>Width</dt>',
+									'<dd>'+kvp["Overall Width"]+'</dd>',
+								'</div>',
+							].join("");
+						}
+						var heatHTML = "";
+						if("Heat Type" in kvp) {
+							heatHTML = [
+								'<div class="spec-wrap">',
+									'<dt>Heat Type</dt>',
+									'<dd>'+kvp["Heat Type"]+'</dd>',
+								'</div>',
+							].join("");
+						}
 						var titleString = product.info.title;
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
@@ -625,6 +664,8 @@
 										dBAHTML,
 										cfmHTML,
 										sonesHTML,
+										heatHTML,
+										widthHTML,
 /*										'<div class="spec-wrap long">',
 											'<dt>DIMENSIONS</dt>',
 											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
