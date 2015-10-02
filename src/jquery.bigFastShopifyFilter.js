@@ -627,6 +627,7 @@
 								'</div>',
 							].join("");
 						}
+
 						var titleString = product.info.title;
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
@@ -649,7 +650,15 @@
 								'</div>',
 					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 									'<dl class="specs">',
-/*
+
+
+										capacityHTML,
+										locationHTML,
+										dBAHTML,
+										cfmHTML,
+										sonesHTML,
+										heatHTML,
+										widthHTML,
 										'<div class="spec-wrap">',
 											'<dt>MODEL</dt>',
 											'<dd>'+product.info.handle.split('-')[0]+'</dd>',
@@ -658,14 +667,6 @@
 											'<dt>SERIAL</dt>',
 											'<dd>'+product.info.handle.split('-')[1]+'</dd>',
 										'</div>',
-*/
-										capacityHTML,
-										locationHTML,
-										dBAHTML,
-										cfmHTML,
-										sonesHTML,
-										heatHTML,
-										widthHTML,
 /*										'<div class="spec-wrap long">',
 											'<dt>DIMENSIONS</dt>',
 											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
