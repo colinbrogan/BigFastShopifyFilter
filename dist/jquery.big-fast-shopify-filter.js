@@ -501,21 +501,8 @@
 					console.log("Inserting Options");
 					$(this.element).find("#options-go-here").empty();
 					$(this.element).find("#options-go-here").addClass("loading").append(this.renderOptions());
-					var $sd_images_button = $('<button class="sd_images">Compare S&D</button>');
-					$sd_images_button.click(function(event) {
-						$('ul.product-grid li.sd-with-images').each(function() {
-						        var sd_image = $(this).find("a.product-image").data("last-image");
-						        if(sd_image) {
-						            $(this).find("a.product-image img").attr("src",sd_image);
-						            $(this).addClass("sd-image-activated");
-						        }
-						});
-					});
+					var $sd_images_button = $('<button class="sd_images btn btn-purple">S&D Photos</button>');
 					$(this.element).find("#options-go-here").append($sd_images_button);
-					$(this.element).find("#options-go-here h3").unbind("click");
-					$(this.element).find("#options-go-here h3").click(function() {
-						$(this).toggleClass("active");
-					});
 					this.registerActions();
 				},
 				getAllReceived: function() {
@@ -651,7 +638,7 @@
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+" "+sdWithImagesClass+"'>",
 								'<div class="snapshot">',
-									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image" data-last-image="'+last_image+'">',
+									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image" data-first-image="'+first_image+'" data-last-image="'+last_image+'">',
 										image_string,
 									'</a>',
 								'</div>',
@@ -835,6 +822,40 @@
 
 					$('#add-results').click(function(event) {
 						thePrototypeExtension.infiniteScroll();
+					});
+					$("button.sd_images").click(function(event) {
+						$(this).toggleClass("active");
+						if($(this).hasClass("active")) {
+							$('ul.product-grid li').each(function() {
+								if($(this).hasClass("sd-with-images")) {
+							        var sd_image = $(this).find("a.product-image").data("last-image");
+							        var mfg_image = $(this).find("a.product-image").attr("src");
+							        if(sd_image) {
+							        	$(this).find("a.product-image").data("first-image",mfg_image);
+							            $(this).find("a.product-image img").attr("src",sd_image);
+							            $(this).addClass("sd-image-activated");
+							        } else {
+							        	$(this).addClass("sd-no-image-activated");		
+							        }
+								} else {
+							        $(this).addClass("sd-no-image-activated");					
+								}
+							});
+						} else {
+							$('ul.product-grid li').each(function() {
+								if($(this).hasClass("sd-with-images")) {
+							        var mfg_image = $(this).find("a.product-image").data("first-image");
+							        $(this).find("a.product-image img").attr("src",mfg_image);
+							        $(this).removeClass("sd-image-activated");
+								} else {
+							        $(this).removeClass("sd-no-image-activated");					
+								}
+							});
+						}
+					});
+					$(this.element).find("#options-go-here h3").unbind("click");
+					$(this.element).find("#options-go-here h3").click(function() {
+						$(this).toggleClass("active");
 					});
 /*					
 					$(window).scroll(function() {
