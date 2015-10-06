@@ -231,7 +231,9 @@
 										var splitFields = tagPreValue.split(":");
 										var field_name = splitFields[1];
 										var field_value = splitFields[2];
-										if(field_name === criteria) {	
+										console.log('field_name === decodeURI(criteria).replace("+"," ")');
+										console.log(field_name === decodeURI(criteria).replace("+"," "));
+										if(field_name === decodeURI(criteria).replace("+"," ")) {	
 											if(this.filter_criteria[criteria].constructor == Array) {
 												var somethingMatched = false;
 												for(var i in this.filter_criteria[criteria]) {
@@ -445,12 +447,20 @@
 				renderOptions: function() {
 					var return_string = "";
 					for(var option in this.filter_options) {
+						var ui_label = option.toUpperCase();
+						if(this.settings.tagfields.hasOwnProperty(option)) {
+							ui_label = this.settings.tagfields[option].ui_label;
+						} else if(this.settings.metafields.hasOwnProperty(option)) {
+							ui_label = this.settings.metafields[option].ui_label;
+						}
+						console.log("ui_label");
+						console.log(ui_label);
 						if(option.toUpperCase()=="CONDITION"||option.toUpperCase()=="KIND"||option.toUpperCase()=="TYPE"||option.toUpperCase()=="TRUCKLOAD") {
-							return_string += "<h3 class='active'>"+option.toUpperCase()+"</h3>";
+							return_string += "<h3 class='active'>"+ui_label+"</h3>";
 						} else if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option).replace(/%20/g,"+"))) {
-							return_string += "<h3 class='active'>"+option.toUpperCase()+"</h3>";
+							return_string += "<h3 class='active'>"+ui_label+"</h3>";
 						} else {
-							return_string += "<h3>"+option.toUpperCase()+"</h3>";
+							return_string += "<h3>"+ui_label+"</h3>";
 						}
 						return_string += "<ul class=\"tick-boxes\">";
 						for(var value in this.filter_options[option]) {
