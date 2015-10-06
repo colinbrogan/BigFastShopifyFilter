@@ -72,7 +72,7 @@
 						// you can add more functions like the one below and
 						// call them like so: this.yourOtherFunction(this.element, this.settings).
 						// this.settings.type.enable
-
+						console.log("init here !");
 						if($(this.element).data("collection") !== undefined) {
 							this.setCollectionHandle($(this.element).data("collection"));
 						} else {
@@ -175,19 +175,22 @@
 						if(this.allReceived[handle].metafields.Location !== undefined) {
 							if(this.allReceived[handle].metafields.Location.toLowerCase() == "41shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41scrap") {
 								toFiltered = false;
+								continue;
 							}
 						}
 						// go ahead and filter out Sold Products
 						if( (this.allReceived[handle].metafields.Condition == "S&D" || this.allReceived[handle].metafields.Condition == "NITB") && this.allReceived[handle].info.variants[0].inventory_quantity <= 0) {
 							toFiltered = false;
+							continue;
 						} else if(this.allReceived[handle].metafields.Condition == undefined) {
 							toFiltered = false;
+							continue;
 						}
 
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
-							
-							if(this.settings.metafields.hasOwnProperty(criteria)) {
+							var clean_criteria = decodeURIComponent(criteria.replace(/\+/g, '%20'));
+							if(this.settings.metafields.hasOwnProperty(clean_criteria)) {
 								for(var metafield in this.allReceived[handle].metafields) {
 									var current_metafield_value = this.allReceived[handle].metafields[metafield];
 									if(metafield === criteria) {
@@ -206,6 +209,7 @@
 												/* do nothing */
 											} else {
 												toFiltered = false;
+												continue;
 											}
 										// if a single parameter is present,
 										// then filter on that parameter only
@@ -215,25 +219,24 @@
 												/* do nothing */
 											} else {
 												toFiltered = false;
+												continue;
 											}
 										}
 									}
 								}
 								
-							} else if(this.settings.tagfields.hasOwnProperty(criteria)) {
-
+							} else if(this.settings.tagfields.hasOwnProperty(clean_criteria)) {
 								// create a variable which remains false if a filter criteria is found nowhere in a product's tag
 								var snagged_tag = false;
 								for (var tag in this.allReceived[handle].info.tags) {
 									var tagPreValue = this.allReceived[handle].info.tags[tag];
-									if (tagPreValue.indexOf("kvp:"+criteria) === 0) {
+									if (tagPreValue.indexOf("kvp:"+clean_criteria) === 0) {
 										snagged_tag = true;
 										var splitFields = tagPreValue.split(":");
 										var field_name = splitFields[1];
 										var field_value = splitFields[2];
-										console.log('field_name === decodeURI(criteria).replace("+"," ")');
-										console.log(field_name === decodeURI(criteria).replace("+"," "));
-										if(field_name === decodeURI(criteria).replace("+"," ")) {	
+
+										if(field_name == decodeURIComponent(criteria.replace(/\+/g, '%20'))) {	
 											if(this.filter_criteria[criteria].constructor == Array) {
 												var somethingMatched = false;
 												for(var i in this.filter_criteria[criteria]) {
@@ -246,35 +249,30 @@
 													/* do nothing */
 												} else {
 													toFiltered = false;
+													continue;
 												}
 											// if a single parameter is present,
 											// then filter on that parameter only
 											} else {
 												var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
-												if(criteria == "Counter-Depth") {
-													console.log("made it here 2");
-													console.log(field_name);
-													console.log(field_value);
-													console.log(current_criteria_value);
-												}
+
 												if(current_criteria_value === field_value) {
 													/* do nothing */
 													if(criteria == "Counter-Depth") {
-														console.log("do nothing");
 													}
 												} else {
 													if(criteria == "Counter-Depth") {
-														console.log("filter out");
 													}
 													toFiltered = false;
+													continue;
 												}
 											}
 										}
 									}
 								}
 								if(snagged_tag == false) {
-									console.log("snagged_tag is false");
 									toFiltered = false;
+									continue;
 								}
 							} else if(this.settings.type.enable && criteria == "Type") {
 								if(this.filter_criteria[criteria].constructor == Array) { 
@@ -289,6 +287,7 @@
 										/* do nothing */
 									} else {
 										toFiltered = false;
+										continue;
 									}	
 								} else {
 									var criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
@@ -296,6 +295,7 @@
 										/* do nothing */
 									} else {
 										toFiltered = false;
+										continue;
 									}
 								}
 							}
@@ -306,10 +306,6 @@
 						}
 						
 					}
-					console.log("this.filter_criteria");
-					console.log(this.filter_criteria);
-					console.log("this.filtered");
-					console.log(this.filtered);
 					this.trickleToGrid();
 				},
 				storeAllReceived: function(load) {
@@ -453,8 +449,6 @@
 						} else if(this.settings.metafields.hasOwnProperty(option)) {
 							ui_label = this.settings.metafields[option].ui_label;
 						}
-						console.log("ui_label");
-						console.log(ui_label);
 						if(option.toUpperCase()=="CONDITION"||option.toUpperCase()=="KIND"||option.toUpperCase()=="TYPE"||option.toUpperCase()=="TRUCKLOAD") {
 							return_string += "<h3 class='active'>"+ui_label+"</h3>";
 						} else if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option).replace(/%20/g,"+"))) {
@@ -771,6 +765,7 @@
 								].join("")
 							);	
 						}
+						this.getProductNumbers();
 
 				},
 				addResultsButton: function() {
@@ -905,7 +900,7 @@
 					};
 
 /*					if(this.all_loads_in) {		*/
-						addTheStuff();
+					addTheStuff();
 /*					} else {
 						$('ul.product-grid').addClass("adding-products");
 						$(this.element).on("loadsFinished",function(event) {
@@ -914,6 +909,14 @@
 					}
 */
 					this.addResultsButton();
+					this.getProductNumbers();
+
+				},
+				getProductNumbers: function() {
+					var total_appliances = Object.keys(this.filtered).length;
+					var showing_appliances = total_appliances - this.queuedForScroll.length;
+					var result_message = "Showing "+showing_appliances+" / "+total_appliances+" Appliances";
+					$(".result_count").html(result_message);
 				},
 				refresh: function() {
 					somePrivateMethod("refresh");
