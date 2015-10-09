@@ -80,7 +80,6 @@
 						// you can add more functions like the one below and
 						// call them like so: this.yourOtherFunction(this.element, this.settings).
 						// this.settings.type.enable
-						console.log("init here !");
 						if($(this.element).data("collection") !== undefined) {
 							this.setCollectionHandle($(this.element).data("collection"));
 						} else {
@@ -135,6 +134,7 @@
 					var $theElement = $(this.element);
 					this.filter();
 					this.buildOptions();
+					this.sendGAEvents(params);
 					if(this.all_loads_in === false) {
 						var doWithEachLoad = function(load) {
 							$theElement.trigger("loadReceived",load);
@@ -164,12 +164,21 @@
 						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,whenDone);
 					}
 				},
+				sendGAEvents: function(params) {
+					console.log('sendGAEvents!');
+					for(var key in params) {
+						console.log("ga('send', 'event', 'Filtering Collection with', '"+key+": "+params[key]+"');");
+						ga('send', 'event', 'Filtering Collection with', key+": "+params[key]);
+					}
+				},
 				fastReload: function(params) {
 					$(this.element).find("ul.product-grid").empty();
 					this.queuedForScroll = [];
 					this.filter_criteria = params;
 					var $theElement = $(this.element);
 					this.filter();
+					this.sendGAEvents(params);
+
 				},
 				filter: function() {
 					$(this.element).find("ul.product-grid").addClass("loading");
@@ -502,11 +511,12 @@
 					return return_string;
 				},
 				buildOptions: function() {
-					console.log("Inserting Options");
 					$(this.element).find("#options-go-here").empty();
 					$(this.element).find("#options-go-here").addClass("loading").append(this.renderOptions());
+			/*
 					var $sd_images_button = $('<button class="sd_images btn btn-purple">S&D Photos</button>');
 					$(this.element).find("#options-go-here").append($sd_images_button);
+			*/
 					this.registerActions();
 				},
 				getAllReceived: function() {
@@ -544,21 +554,23 @@
 						if(product.info.images.length > 3 && condition == "Scratch & Dent") {
 							sdWithImagesClass = "sd-with-images";
 							if(product.info.images[product.info.images.length - 1]) {
-								if(product.info.vendor == "LG") {
-									last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_large.jpeg");
-								} else {
-									last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_medium.jpeg");
+								last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_medium.jpeg");
+								if(last_image.indexOf(".jpg") > -1) {
+									last_image = last_image.replace(".jpg","_medium.jpg");
 								}
 							}
 						}
 						var image_string = "";
 						var first_image = product.info.images[0];
+						var img_class = "";
 						if(first_image) {
 							if(product.info.vendor == "LG") {
-								image_string = '<img src="'+first_image.replace(".jpeg","_large.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
+								first_image = first_image.replace(".jpeg","_large.jpeg");
+								img_class = product.info.vendor.replace(" ","-");
 
 							} else {
-								image_string = '<img src="'+first_image.replace(".jpeg","_medium.jpeg")+'" class="'+product.info.vendor.replace(" ","-")+'" alt="" />';
+								first_image = first_image.replace(".jpeg","_medium.jpeg");
+								img_class = product.info.vendor.replace(" ","-");
 
 							}
 						}
@@ -643,14 +655,11 @@
 						return [
 							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+" "+sdWithImagesClass+"'>",
 								'<div class="snapshot">',
-									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image" data-first-image="'+first_image+'" data-last-image="'+last_image+'">',
-										image_string,
+									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" data-first-image="'+first_image+'" data-last-image="'+last_image+'" style="background-image: url(\'http:'+first_image+'\')">',
 									'</a>',
 								'</div>',
 					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 									'<dl class="specs">',
-
-
 										capacityHTML,
 										locationHTML,
 										dBAHTML,
@@ -774,6 +783,7 @@
 							);	
 						}
 						this.getProductNumbers();
+						this.afterDump();
 
 				},
 				addResultsButton: function() {
@@ -829,6 +839,7 @@
 					$('#add-results').click(function(event) {
 						thePrototypeExtension.infiniteScroll();
 					});
+/*
 					$("button.sd_images").click(function(event) {
 						$(this).toggleClass("active");
 						if($(this).hasClass("active")) {
@@ -859,6 +870,7 @@
 							});
 						}
 					});
+*/
 					$(this.element).find("#options-go-here h3").unbind("click");
 					$(this.element).find("#options-go-here h3").click(function() {
 						$(this).toggleClass("active");
@@ -918,7 +930,11 @@
 */
 					this.addResultsButton();
 					this.getProductNumbers();
+					this.afterDump();
 
+				},
+				afterDump: function() {
+					$(this.element).trigger('afterDump');
 				},
 				getProductNumbers: function() {
 					var total_appliances = Object.keys(this.filtered).length;
