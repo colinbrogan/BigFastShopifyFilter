@@ -379,9 +379,15 @@
 										}
 							}
 						}
+						load.products[handle]
 						loop3:
 						for (var tag in load.products[handle].info.tags) {
 							var tagPreValue = load.products[handle].info.tags[tag];
+							if(tagPreValue == "sale") {
+								load.products[handle].info.tags.push("kvp:Clearance:On Sale");
+							} else if(tagPreValue == "markdown") {
+								load.products[handle].info.tags.push("kvp:Clearance:Marked Down");
+							}
 							if (tagPreValue.indexOf("kvp:") === 0) {
 								var splitFields = tagPreValue.split(":");
 								var field_name = splitFields[1];
