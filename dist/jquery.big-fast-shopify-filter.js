@@ -574,6 +574,9 @@
 
 							}
 						}
+						if (product.info.type == "Microwave Oven" || product.info.type == "Ventilation" || product.info.type == "Built-in Oven" || product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop") {
+							img_class += " contain";
+						}
 						var locationHTML = "";
 /*						if(product.metafields.Location !== undefined) {
 							locationHTML = 	[
