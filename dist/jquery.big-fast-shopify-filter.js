@@ -388,11 +388,27 @@
 							}
 						}
 						loop3:
-						for (var tag in load.products[handle].info.tags) {
-							var tagPreValue = load.products[handle].info.tags[tag];
+
+						for (var i = 0; i < load.products[handle].info.tags.length; i++) {
+
+							var tagPreValue = load.products[handle].info.tags[i];
+							if(tagPreValue == "sale") {
+								load.products[handle].info.tags.push("kvp:Clearance:On Sale");
+								console.log("Pushed Clearance:On Sale");
+								console.log(handle);
+								console.log(load.products[handle].info.tags);
+							} else if(tagPreValue == "Markdown") {
+								load.products[handle].info.tags.push("kvp:Clearance:Marked Down");
+								console.log("Pushed Clearance:Marked Down");
+								console.log(handle);
+								console.log(load.products[handle].info.tags);
+							}
 							if (tagPreValue.indexOf("kvp:") === 0) {
 								var splitFields = tagPreValue.split(":");
 								var field_name = splitFields[1];
+								if(field_name == "Clearance") {
+									console.log("Hit a Clearance!");
+								}
 								var field_value = splitFields[2];
 								// Make sure this is a filterable property
 								if(this.settings.tagfields.hasOwnProperty(field_name)) {
@@ -456,6 +472,8 @@
 						}
 						this.allReceived[handle] = load.products[handle];
 					}
+					console.log("this.allReceived");
+					console.log(this.allReceived);
 				},
 				renderOptions: function() {
 					var return_string = "";
@@ -466,7 +484,7 @@
 						} else if(this.settings.metafields.hasOwnProperty(option)) {
 							ui_label = this.settings.metafields[option].ui_label;
 						}
-						if(option.toUpperCase()=="CONDITION"||option.toUpperCase()=="KIND"||option.toUpperCase()=="TYPE"||option.toUpperCase()=="TRUCKLOAD") {
+						if(option.toUpperCase()=="CONDITION"||option.toUpperCase()=="KIND"||option.toUpperCase()=="TYPE"||option.toUpperCase()=="TRUCKLOAD"||option.toUpperCase()=="CLEARANCE") {
 							return_string += "<h3 class='active'>"+ui_label+"</h3>";
 						} else if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option).replace(/%20/g,"+"))) {
 							return_string += "<h3 class='active'>"+ui_label+"</h3>";
@@ -650,8 +668,9 @@
 						var markDownClass = "";
 						for(var i in product.info.tags) {
 							if(product.info.tags[i] == "Markdown") {
-								markDownClass = "clearance";
-								break;
+								markDownClass += " clearance";
+							} else if(product.info.tags[i] == "sale") {
+								markDownClass += " on_sale";
 							}
 						}
 
