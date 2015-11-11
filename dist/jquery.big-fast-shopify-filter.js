@@ -394,21 +394,12 @@
 							var tagPreValue = load.products[handle].info.tags[i];
 							if(tagPreValue == "sale") {
 								load.products[handle].info.tags.push("kvp:Clearance:On Sale");
-								console.log("Pushed Clearance:On Sale");
-								console.log(handle);
-								console.log(load.products[handle].info.tags);
 							} else if(tagPreValue == "Markdown") {
 								load.products[handle].info.tags.push("kvp:Clearance:Marked Down");
-								console.log("Pushed Clearance:Marked Down");
-								console.log(handle);
-								console.log(load.products[handle].info.tags);
 							}
 							if (tagPreValue.indexOf("kvp:") === 0) {
 								var splitFields = tagPreValue.split(":");
 								var field_name = splitFields[1];
-								if(field_name == "Clearance") {
-									console.log("Hit a Clearance!");
-								}
 								var field_value = splitFields[2];
 								// Make sure this is a filterable property
 								if(this.settings.tagfields.hasOwnProperty(field_name)) {
