@@ -586,7 +586,7 @@
 						if (product.info.type == "Microwave Oven" || product.info.type == "Ventilation" || product.info.type == "Built-in Oven" || product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop") {
 							img_class += " contain";
 						}
-						if ((product.info.vendor == "LG" && (product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop" || product.info.type == "Microwave Oven" || product.info.type == "Cooking Accessory")) || (product.info.type == "Range" && kvp["Kind"] == "Slide-In")) {
+						if ((product.info.vendor == "LG" && (product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop" || product.info.type == "Microwave Oven" || product.info.type == "Cooking Accessory")) || (product.info.type == "Range" && kvp["Kind"] == "Slide-In") || (product.info.type == "Freezer" && kvp["Kind"] == "Chest")) {
 							img_class += " contain_override";
 						}
 						var locationHTML = "";
