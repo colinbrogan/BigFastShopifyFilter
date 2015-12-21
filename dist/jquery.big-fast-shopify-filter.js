@@ -658,6 +658,7 @@
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
 						}
+						titleString = titleString + " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
 
 						var markDownClass = "";
 						for(var i in product.info.tags) {
