@@ -107,6 +107,17 @@ Shopify.Mazer.pipeInCollection = {
 					});
 
 
-	},
+	}
 	/* private methods for class */
+}
+Shopify.Mazer = Shopify.Mazer || {};
+Shopify.Mazer.utilities = {
+	keyCount: function(obj) {
+	    var count = 0;
+	    for(var prop in obj)
+	    {
+	        count++;
+	    }
+	    return count;
+	}
 }

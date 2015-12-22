@@ -180,21 +180,6 @@
 						/* leave determines whether or not a product matches all parameters and should be displayed, it begins as true. The idea being, if any current sort parameter doesn't match to the product, the product is discarded. This seems to me be the fastest means of narrowing down a listing */
 						var toFiltered = true;
 
-						// go ahead and filter out 41SCRAP and 41SHOP
-						if(this.allReceived[handle].metafields.Location !== undefined) {
-							if(this.allReceived[handle].metafields.Location.toLowerCase() == "41shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41scrap") {
-								toFiltered = false;
-								continue;
-							}
-						}
-						// go ahead and filter out Sold Products
-						if( (this.allReceived[handle].metafields.Condition == "S&D" || this.allReceived[handle].metafields.Condition == "NITB") && this.allReceived[handle].info.variants[0].inventory_quantity <= 0) {
-							toFiltered = false;
-							continue;
-						} else if(this.allReceived[handle].metafields.Condition == undefined) {
-							toFiltered = false;
-							continue;
-						}
 
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
