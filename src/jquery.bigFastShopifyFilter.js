@@ -520,173 +520,25 @@
 								kvp[tagsplit[1]] = tagsplit[2];
 							}
 						}
-						var condition = "";
-						switch(product.metafields.Condition) {
-							case "S&D":
-								condition = "Scratch & Dent";
-								break;
-							case "NITB":
-								condition = "New In Box";
-								break;
-							case "SO":
-								condition = "Special Order";
-								break;
-							case "CO":
-								condition = "Closeout";
-								break;
-						}
+
 						var sdWithImagesClass = "";
-						var last_image = "";
-						if(product.info.images.length > 3 && condition == "Scratch & Dent") {
-							sdWithImagesClass = "sd-with-images";
-							if(product.info.images[product.info.images.length - 1]) {
-								last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_medium.jpeg");
-								if(last_image.indexOf(".jpg") > -1) {
-									last_image = last_image.replace(".jpg","_medium.jpg");
-								}
-							}
-						}
 						var image_string = "";
 						var first_image = product.info.images[0];
 						var img_class = "";
-						if(first_image) {
-							if(product.info.vendor == "LG") {
-								first_image = first_image.replace(".jpeg","_large.jpeg");
-								img_class = product.info.vendor.replace(" ","-");
-
-							} else {
-								first_image = first_image.replace(".jpeg","_medium.jpeg");
-								img_class = product.info.vendor.replace(" ","-");
-
-							}
-						}
-						if (product.info.type == "Microwave Oven" || product.info.type == "Ventilation" || product.info.type == "Built-in Oven" || product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop") {
-							img_class += " contain";
-						}
-						if ((product.info.vendor == "LG" && (product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop" || product.info.type == "Microwave Oven" || product.info.type == "Cooking Accessory")) || (product.info.type == "Range" && kvp["Kind"] == "Slide-In") || (product.info.type == "Freezer" && kvp["Kind"] == "Chest")) {
-							img_class += " contain_override";
-						}
-						var locationHTML = "";
-/*						if(product.metafields.Location !== undefined) {
-							locationHTML = 	[
-										'<div class="spec-wrap">',
-											'<dt>LOCATION</dt>',
-											'<dd>'+product.metafields.Location+'</dd>',
-										'</div>'
-										].join("");
-						}
-*/
-						var capacityHTML = "";
-						if("Total Capacity (cubic feet)" in kvp) {
-							capacityHTML = [
-								'<div class="spec-wrap">',
-									'<dt>CAPACITY</dt>',
-									'<dd>'+kvp["Total Capacity (cubic feet)"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var dBAHTML = "";
-						if("dBA" in kvp) {
-							dBAHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Decibals</dt>',
-									'<dd>'+kvp["dBA"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var sonesHTML = "";
-						if("Sones" in kvp) {
-							sonesHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Sones</dt>',
-									'<dd>'+kvp["Sones"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var cfmHTML = "";
-						if("CFM" in kvp) {
-							cfmHTML = [
-								'<div class="spec-wrap">',
-									'<dt>CFM</dt>',
-									'<dd>'+kvp["CFM"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var widthHTML = "";
-						if("Width" in kvp) {
-							widthHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Width</dt>',
-									'<dd>'+kvp["Overall Width"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var heatHTML = "";
-						if("Heat Type" in kvp) {
-							heatHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Heat Type</dt>',
-									'<dd>'+kvp["Heat Type"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-
-						var titleString = product.info.title;
-						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
-							titleString = "LG "+titleString;
-						}
-						titleString = titleString + " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
-
-						var markDownClass = "";
-						for(var i in product.info.tags) {
-							if(product.info.tags[i] == "Markdown") {
-								markDownClass += " clearance";
-							} else if(product.info.tags[i] == "sale") {
-								markDownClass += " on_sale";
-							}
-						}
 
 						return [
-							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+" "+sdWithImagesClass+"'>",
+							"<li id='p"+product.info.id+"'>",
 								'<div class="snapshot">',
-									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" data-first-image="'+first_image+'" data-last-image="'+last_image+'" style="background-image: url(\'http:'+first_image+'\')">',
+									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" style="background-image: url(\'http:'+first_image+'\')">',
 									'</a>',
 								'</div>',
 					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
-									'<dl class="specs">',
-										capacityHTML,
-										locationHTML,
-										dBAHTML,
-										cfmHTML,
-										sonesHTML,
-										heatHTML,
-										widthHTML,
-										'<div class="spec-wrap">',
-											'<dt>MODEL</dt>',
-											'<dd>'+product.info.handle.split('-')[0]+'</dd>',
-										'</div>',
-										'<div class="spec-wrap">',
-											'<dt>SERIAL</dt>',
-											'<dd>'+product.info.handle.split('-')[1]+'</dd>',
-										'</div>',
-/*										'<div class="spec-wrap long">',
-											'<dt>DIMENSIONS</dt>',
-											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
-										'</div>',
-*/
-									'</dl>',
+
 					            '<div class="price-condition">',
 					                '<dl class="price">',
 					                	'<dt><span hidden>Price</span></dt>',
 					                	'<dd>$'+product.info.price/100+'</dd>',
 					                '</dl>',
-					                '<div class="count-breakout">',
-					                	'<div>',
-						                    '<span class="tag-count '+product.metafields.Condition.replace("&", "").toLowerCase()+'">',
-						                    	condition,
-						                    '</span>',
-					                  	'</div>',
-					                '</div>',
 					            '</div>',
 					         '</li>',
 						].join("");
