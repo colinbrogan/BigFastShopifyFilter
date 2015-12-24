@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				src: ["src/jquery.bigFastShopifyFilter.js"],
-				dest: "dist/jquery.big-fast-shopify-filter.js"
+				dest: "dist/jquery.big-fast-shopify-filter.js",
 			}
 		},
 
@@ -40,7 +40,7 @@ module.exports = function(grunt) {
 		uglify: {
 			my_target: {
 				src: ["dist/jquery.big-fast-shopify-filter.js"],
-				dest: "dist/jquery.big-fast-shopify-filter.min.js"
+				dest: "dist/jquery.big-fast-shopify-filter.min.js",
 			},
 			options: {
 				banner: "<%= meta.banner %>"

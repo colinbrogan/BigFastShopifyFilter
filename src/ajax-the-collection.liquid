@@ -4,12 +4,12 @@
 	"title": "{{ collection.title }}",
 	"page": "{{ paginate.current_page }}",
 	"products": {
-		{% for product in collection.products %}{% if product.variants[0].inventory_quantity == 1 or product.metafields.c_f.Condition == "SO" %}{% if count != 0 %},{% endif %}
+		{% for product in collection.products %}{% if count != 0 %},{% endif %}
 				"{{ product.handle }}": {
 					"count": {{ count }},
 					"info": {{ product | json | replace: "'", '&#39;' }},
-					"metafields": {{ product.metafields.c_f | json }}
-				}{% capture count %}{% increment count %}{% endcapture %}{% endif %}{% endfor %}
+					"metafields": {{ product.metafields.filter | json }}
+				}{% capture count %}{% increment count %}{% endcapture %}{% endfor %}
 	}
 
 }

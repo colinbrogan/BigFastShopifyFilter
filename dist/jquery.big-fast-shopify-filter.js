@@ -44,7 +44,7 @@
 							one_option_hide: true,
 					},
 					type: {
-							enable: true,
+							enable: false,
 							ui_component: "checkbox-button-group",
 							placement: "sidebar",
 							one_option_hide: true,
@@ -134,7 +134,6 @@
 					var $theElement = $(this.element);
 					this.filter();
 					this.buildOptions();
-					this.sendGAEvents(params);
 					if(this.all_loads_in === false) {
 						var doWithEachLoad = function(load) {
 							$theElement.trigger("loadReceived",load);
@@ -164,21 +163,12 @@
 						Shopify.Mazer.pipeInCollection.go(this.collection_handle,doWithEachLoad,1,whenDone);
 					}
 				},
-				sendGAEvents: function(params) {
-					console.log('sendGAEvents!');
-					for(var key in params) {
-						console.log("ga('send', 'event', 'Filtering Collection with', '"+key+": "+params[key]+"');");
-						ga('send', 'event', 'Filtering Collection with', key+": "+params[key]);
-					}
-				},
 				fastReload: function(params) {
 					$(this.element).find("ul.product-grid").empty();
 					this.queuedForScroll = [];
 					this.filter_criteria = params;
 					var $theElement = $(this.element);
 					this.filter();
-					this.sendGAEvents(params);
-
 				},
 				filter: function() {
 					$(this.element).find("ul.product-grid").addClass("loading");
@@ -188,26 +178,12 @@
 						/* leave determines whether or not a product matches all parameters and should be displayed, it begins as true. The idea being, if any current sort parameter doesn't match to the product, the product is discarded. This seems to me be the fastest means of narrowing down a listing */
 						var toFiltered = true;
 
-						// go ahead and filter out 41SCRAP and 41SHOP
-						if(this.allReceived[handle].metafields.Location !== undefined) {
-							if(this.allReceived[handle].metafields.Location.toLowerCase() == "41shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41scrap") {
-								toFiltered = false;
-								continue;
-							}
-						}
-						// go ahead and filter out Sold Products
-						if( (this.allReceived[handle].metafields.Condition == "S&D" || this.allReceived[handle].metafields.Condition == "NITB") && this.allReceived[handle].info.variants[0].inventory_quantity <= 0) {
-							toFiltered = false;
-							continue;
-						} else if(this.allReceived[handle].metafields.Condition == undefined) {
-							toFiltered = false;
-							continue;
-						}
-
+						console.log("Checking "+this.allReceived[handle].info.description);
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
 							var clean_criteria = decodeURIComponent(criteria.replace(/\+/g, '%20'));
 							if(this.settings.metafields.hasOwnProperty(clean_criteria)) {
+								console.log("Checking metafields for"+clean_criteria);
 								for(var metafield in this.allReceived[handle].metafields) {
 									var current_metafield_value = this.allReceived[handle].metafields[metafield];
 									if(metafield === criteria) {
@@ -224,7 +200,9 @@
 											}
 											if(somethingMatched) {
 												/* do nothing */
+												console.log("somethingMatched = true 1");
 											} else {
+												console.log("toFiltered = false 1");
 												toFiltered = false;
 												continue;
 											}
@@ -233,8 +211,11 @@
 										} else {
 											var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
 											if(current_metafield_value === current_criteria_value) {
+												console.log("somethingMatched = true 2")
+
 												/* do nothing */
 											} else {
+												console.log("toFiltered = false 2");
 												toFiltered = false;
 												continue;
 											}
@@ -245,6 +226,8 @@
 							} else if(this.settings.tagfields.hasOwnProperty(clean_criteria)) {
 								// create a variable which remains false if a filter criteria is found nowhere in a product's tag
 								var snagged_tag = false;
+								console.log("Checking tags for"+clean_criteria);
+								var trackSameKey = {};
 								for (var tag in this.allReceived[handle].info.tags) {
 									var tagPreValue = this.allReceived[handle].info.tags[tag];
 									if (tagPreValue.indexOf("kvp:"+clean_criteria) === 0) {
@@ -252,6 +235,8 @@
 										var splitFields = tagPreValue.split(":");
 										var field_name = splitFields[1];
 										var field_value = splitFields[2];
+										field_name = $('<div/>').html(field_name).text();
+										field_value = $('<div/>').html(field_value).text();
 
 										if(field_name == decodeURIComponent(criteria.replace(/\+/g, '%20'))) {	
 											if(this.filter_criteria[criteria].constructor == Array) {
@@ -264,30 +249,45 @@
 												}
 												if(somethingMatched) {
 													/* do nothing */
+													trackSameKey[clean_criteria] = field_value;
 												} else {
-													toFiltered = false;
-													continue;
+													console.log("toFiltered = false 3");
+													/* before filtering out, check that another tag hasn't matched the same key */
+													if(trackSameKey.hasOwnProperty(clean_criteria)) {
+														/* do nothing */
+													} else {
+														toFiltered = false;
+														continue;
+													}
+
 												}
 											// if a single parameter is present,
 											// then filter on that parameter only
 											} else {
 												var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
-
+												console.log(clean_criteria);
+												console.log(field_name);
+												console.log(current_criteria_value);
+												console.log(field_value);
 												if(current_criteria_value === field_value) {
 													/* do nothing */
-													if(criteria == "Counter-Depth") {
-													}
+													trackSameKey[clean_criteria] = field_value;
 												} else {
-													if(criteria == "Counter-Depth") {
+													console.log("toFiltered = false 4");
+													/* before filtering out, check that another tag hasn't matched the same key */
+													if(trackSameKey.hasOwnProperty(clean_criteria)) {
+														/* do nothing */
+													} else {
+														toFiltered = false;
+														continue;
 													}
-													toFiltered = false;
-													continue;
 												}
 											}
 										}
 									}
 								}
 								if(snagged_tag == false) {
+									console.log("toFiltered = false 5");
 									toFiltered = false;
 									continue;
 								}
@@ -303,6 +303,7 @@
 									if(somethingMatched) {
 										/* do nothing */
 									} else {
+										console.log("toFiltered = false 6");
 										toFiltered = false;
 										continue;
 									}	
@@ -311,6 +312,34 @@
 									if(this.allReceived[handle].info.type == criteria_value) {
 										/* do nothing */
 									} else {
+										console.log("toFiltered = false 7");
+										toFiltered = false;
+										continue;
+									}
+								}
+							} else if(this.settings.vendor.enable && criteria == "Vendor") {
+								console.log("Vendor is enabled");
+								if(this.filter_criteria[criteria].constructor == Array) { 
+									var somethingMatched = false;
+									for(var i in this.filter_criteria[criteria]) {
+										var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria][i].replace(/\+/g, '%20'));
+										if(this.allReceived[handle].info.vendor === current_criteria_value) {
+											somethingMatched = true;
+										}
+									}
+									if(somethingMatched) {
+										/* do nothing */
+									} else {
+										console.log("toFiltered = false 6");
+										toFiltered = false;
+										continue;
+									}	
+								} else {
+									var criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
+									if(this.allReceived[handle].info.vendor == criteria_value) {
+										/* do nothing */
+									} else {
+										console.log("toFiltered = false 7");
 										toFiltered = false;
 										continue;
 									}
@@ -323,6 +352,8 @@
 						}
 						
 					}
+					console.log("Currently filtered");
+					console.log(this.filtered);
 					this.trickleToGrid();
 				},
 				storeAllReceived: function(load) {
@@ -392,11 +423,6 @@
 						for (var i = 0; i < load.products[handle].info.tags.length; i++) {
 
 							var tagPreValue = load.products[handle].info.tags[i];
-							if(tagPreValue == "sale") {
-								load.products[handle].info.tags.push("kvp:Clearance:On Sale");
-							} else if(tagPreValue == "Markdown") {
-								load.products[handle].info.tags.push("kvp:Clearance:Marked Down");
-							}
 							if (tagPreValue.indexOf("kvp:") === 0) {
 								var splitFields = tagPreValue.split(":");
 								var field_name = splitFields[1];
@@ -457,7 +483,15 @@
 								this.filter_options["Type"] = {};
 							} else {
 								this.filter_options["Type"][load.products[handle].info.type] = {};
-								this.filter_options["Type"][load.products[handle].info.type].label = load.products[handle].info.type;
+								this.filter_options["Type"][load.products[handle].info.type].label = load.products[handle].info.vendor;
+							}
+						}
+						if(this.settings.vendor.enable) {
+							if(this.filter_options["Vendor"] === undefined) {
+								this.filter_options["Vendor"] = {};
+							} else {
+								this.filter_options["Vendor"][load.products[handle].info.vendor] = {};
+								this.filter_options["Vendor"][load.products[handle].info.vendor].label = load.products[handle].info.vendor;
 							}
 							
 						}
@@ -469,15 +503,13 @@
 				renderOptions: function() {
 					var return_string = "";
 					for(var option in this.filter_options) {
-						var ui_label = option.toUpperCase();
+						var ui_label = option;
 						if(this.settings.tagfields.hasOwnProperty(option)) {
 							ui_label = this.settings.tagfields[option].ui_label;
 						} else if(this.settings.metafields.hasOwnProperty(option)) {
 							ui_label = this.settings.metafields[option].ui_label;
 						}
-						if(option.toUpperCase()=="CONDITION"||option.toUpperCase()=="KIND"||option.toUpperCase()=="TYPE"||option.toUpperCase()=="TRUCKLOAD"||option.toUpperCase()=="CLEARANCE") {
-							return_string += "<h3 class='active'>"+ui_label+"</h3>";
-						} else if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option).replace(/%20/g,"+"))) {
+						if(this.filter_criteria.hasOwnProperty(encodeURIComponent(option).replace(/%20/g,"+"))) {
 							return_string += "<h3 class='active'>"+ui_label+"</h3>";
 						} else {
 							return_string += "<h3>"+ui_label+"</h3>";
@@ -500,10 +532,6 @@
 								}
 							}
 							var background_string = "";
-							if(value == "Clearance") {
-								valueObject.color = "#a56060";
-								active_string += " white-tick";
-							}
 							if(valueObject.color) {
 								background_string += "background-color: "+valueObject.color+"; ";
 								if(parseInt(valueObject.color.replace("#",""),16) < 10329501) {
@@ -543,173 +571,25 @@
 								kvp[tagsplit[1]] = tagsplit[2];
 							}
 						}
-						var condition = "";
-						switch(product.metafields.Condition) {
-							case "S&D":
-								condition = "Scratch & Dent";
-								break;
-							case "NITB":
-								condition = "New In Box";
-								break;
-							case "SO":
-								condition = "Special Order";
-								break;
-							case "CO":
-								condition = "Closeout";
-								break;
-						}
+
 						var sdWithImagesClass = "";
-						var last_image = "";
-						if(product.info.images.length > 3 && condition == "Scratch & Dent") {
-							sdWithImagesClass = "sd-with-images";
-							if(product.info.images[product.info.images.length - 1]) {
-								last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_medium.jpeg");
-								if(last_image.indexOf(".jpg") > -1) {
-									last_image = last_image.replace(".jpg","_medium.jpg");
-								}
-							}
-						}
 						var image_string = "";
 						var first_image = product.info.images[0];
 						var img_class = "";
-						if(first_image) {
-							if(product.info.vendor == "LG") {
-								first_image = first_image.replace(".jpeg","_large.jpeg");
-								img_class = product.info.vendor.replace(" ","-");
-
-							} else {
-								first_image = first_image.replace(".jpeg","_medium.jpeg");
-								img_class = product.info.vendor.replace(" ","-");
-
-							}
-						}
-						if (product.info.type == "Microwave Oven" || product.info.type == "Ventilation" || product.info.type == "Built-in Oven" || product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop") {
-							img_class += " contain";
-						}
-						if ((product.info.vendor == "LG" && (product.info.type == "Room Air Conditioner" || product.info.type == "Cooktop" || product.info.type == "Microwave Oven" || product.info.type == "Cooking Accessory")) || (product.info.type == "Range" && kvp["Kind"] == "Slide-In") || (product.info.type == "Freezer" && kvp["Kind"] == "Chest")) {
-							img_class += " contain_override";
-						}
-						var locationHTML = "";
-/*						if(product.metafields.Location !== undefined) {
-							locationHTML = 	[
-										'<div class="spec-wrap">',
-											'<dt>LOCATION</dt>',
-											'<dd>'+product.metafields.Location+'</dd>',
-										'</div>'
-										].join("");
-						}
-*/
-						var capacityHTML = "";
-						if("Total Capacity (cubic feet)" in kvp) {
-							capacityHTML = [
-								'<div class="spec-wrap">',
-									'<dt>CAPACITY</dt>',
-									'<dd>'+kvp["Total Capacity (cubic feet)"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var dBAHTML = "";
-						if("dBA" in kvp) {
-							dBAHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Decibals</dt>',
-									'<dd>'+kvp["dBA"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var sonesHTML = "";
-						if("Sones" in kvp) {
-							sonesHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Sones</dt>',
-									'<dd>'+kvp["Sones"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var cfmHTML = "";
-						if("CFM" in kvp) {
-							cfmHTML = [
-								'<div class="spec-wrap">',
-									'<dt>CFM</dt>',
-									'<dd>'+kvp["CFM"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var widthHTML = "";
-						if("Width" in kvp) {
-							widthHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Width</dt>',
-									'<dd>'+kvp["Overall Width"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-						var heatHTML = "";
-						if("Heat Type" in kvp) {
-							heatHTML = [
-								'<div class="spec-wrap">',
-									'<dt>Heat Type</dt>',
-									'<dd>'+kvp["Heat Type"]+'</dd>',
-								'</div>',
-							].join("");
-						}
-
 						var titleString = product.info.title;
-						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
-							titleString = "LG "+titleString;
-						}
-						titleString = titleString + " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
-
-						var markDownClass = "";
-						for(var i in product.info.tags) {
-							if(product.info.tags[i] == "Markdown") {
-								markDownClass += " clearance";
-							} else if(product.info.tags[i] == "sale") {
-								markDownClass += " on_sale";
-							}
-						}
-
 						return [
-							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+" "+sdWithImagesClass+"'>",
+							"<li id='p"+product.info.id+"'>",
 								'<div class="snapshot">',
-									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" data-first-image="'+first_image+'" data-last-image="'+last_image+'" style="background-image: url(\'http:'+first_image+'\')">',
+									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" style="background-image: url(\'http:'+first_image+'\')">',
 									'</a>',
 								'</div>',
 					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
-									'<dl class="specs">',
-										capacityHTML,
-										locationHTML,
-										dBAHTML,
-										cfmHTML,
-										sonesHTML,
-										heatHTML,
-										widthHTML,
-										'<div class="spec-wrap">',
-											'<dt>MODEL</dt>',
-											'<dd>'+product.info.handle.split('-')[0]+'</dd>',
-										'</div>',
-										'<div class="spec-wrap">',
-											'<dt>SERIAL</dt>',
-											'<dd>'+product.info.handle.split('-')[1]+'</dd>',
-										'</div>',
-/*										'<div class="spec-wrap long">',
-											'<dt>DIMENSIONS</dt>',
-											'<dd>'+kvp["Overall Width"]+'"W x '+kvp["Overall Height"]+'"H x '+kvp["Overall Depth"]+'"D</dd>',
-										'</div>',
-*/
-									'</dl>',
+
 					            '<div class="price-condition">',
 					                '<dl class="price">',
 					                	'<dt><span hidden>Price</span></dt>',
 					                	'<dd>$'+product.info.price/100+'</dd>',
 					                '</dl>',
-					                '<div class="count-breakout">',
-					                	'<div>',
-						                    '<span class="tag-count '+product.metafields.Condition.replace("&", "").toLowerCase()+'">',
-						                    	condition,
-						                    '</span>',
-					                  	'</div>',
-					                '</div>',
 					            '</div>',
 					         '</li>',
 						].join("");
