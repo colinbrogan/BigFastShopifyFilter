@@ -107,6 +107,7 @@
 				},
 				/********** instance variables  ****************/
 				filtered: {},
+				filteredModels: {};
 				filter_options: {},
 				allReceived: {},
 				displayEndIndex: 0,
@@ -311,11 +312,29 @@
 						}
 
 						if(toFiltered) {
-							this.filtered[handle] = this.allReceived[handle];
+							var currentModel = handle.split("-")[0];
+							if(this.filteredModels.hasOwnProperty(currentModel)) {
+								var old_model_count = this.filtered[handle].info.model_count;
+								if(this.allReceived[handle].info.images.length > 3) {
+									delete this.filtered[handle];
+									this.filtered[handle] = this.allReceived[handle];
+								}
+								this.filtered[handle].info.model_count = old_model_count + 1;
+							} else {
+								this.filteredModels[currentModel] = handle;
+								this.filtered[handle] = this.allReceived[handle];
+								this.filtered[handle].info.model_count = 1;
+							}
+							
 						}
 						
 					}
 					this.trickleToGrid();
+				},
+				checkIfModelAlreadyThere: function(handleCheck) {
+					for(handle in this.filtered) {
+						var model = handle.split("-")[0];
+					}
 				},
 				storeAllReceived: function(load) {
 					if(this.allReceived == null) {
@@ -701,6 +720,9 @@
 						                    	condition,
 						                    '</span>',
 					                  	'</div>',
+					                '</div>',
+					                '<div class="product-count">',
+					                	product.info.model_count+" items",
 					                '</div>',
 					            '</div>',
 					         '</li>',
