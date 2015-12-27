@@ -683,7 +683,7 @@
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
 						}
-						titleString = titleString + " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
+						titleString = titleString; //+ " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
 
 						var markDownClass = "";
 						for(var i in product.info.tags) {
@@ -699,6 +699,9 @@
 								'<div class="snapshot">',
 									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" data-first-image="'+first_image+'" data-last-image="'+last_image+'" style="background-image: url(\'http:'+first_image+'\')">',
 									'</a>',
+					                '<div class="product-count">',
+					                	product.info.model_count+" units &mdash; "+product.info.handle.split("-")[0].toUpperCase(),
+					                '</div>',
 								'</div>',
 					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 									'<dl class="specs">',
@@ -734,9 +737,6 @@
 						                    	condition,
 						                    '</span>',
 					                  	'</div>',
-					                '</div>',
-					                '<div class="product-count">',
-					                	product.info.model_count+" items",
 					                '</div>',
 					            '</div>',
 					         '</li>',
