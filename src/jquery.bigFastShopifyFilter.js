@@ -787,6 +787,7 @@
 									for(var i in this.queuedForScroll) {
 										var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
 										var didWhat = 0;
+/*
 										if(thePrototypeExtension.filtered[filterIndex] == undefined) {
 											console.log("filterIndex");
 											console.log(filterIndex);
@@ -795,11 +796,13 @@
 											console.log(handle);
 											console.log(thePrototypeExtension.filtered[handle]);
 										}
+*/
 
 										/* A loose guess to fix the undefined problem with some filterIndexes in the this.filtered objec */
 										if(thePrototypeExtension.filtered[filterIndex] == undefined) {
 											didWhat = 0.5;
 											break;
+											/* End loose guess */
 										} else if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
 											didWhat = 1;
 											break;
