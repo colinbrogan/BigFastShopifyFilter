@@ -95,8 +95,9 @@
 						});
 						$(this.element).on("loadsFinished",function(event) {
 							console.log("Finished all Loads");
-							thePrototypeExtension.buildOptions();
 							thePrototypeExtension.filter();
+							thePrototypeExtension.buildOptions();
+
 
 							$("#options-go-here").removeClass("loading");
 						});
@@ -107,6 +108,7 @@
 				},
 				/********** instance variables  ****************/
 				filtered: {},
+				filteredModels: {},
 				filter_options: {},
 				allReceived: {},
 				displayEndIndex: 0,
@@ -175,6 +177,7 @@
 				filter: function() {
 					$(this.element).find("ul.product-grid").addClass("loading");
 					this.filtered = {};
+					this.filteredModels = {};
 					/* loop through every product of this collection */
 					for(var handle in this.allReceived) {
 						/* leave determines whether or not a product matches all parameters and should be displayed, it begins as true. The idea being, if any current sort parameter doesn't match to the product, the product is discarded. This seems to me be the fastest means of narrowing down a listing */
@@ -311,11 +314,34 @@
 						}
 
 						if(toFiltered) {
-							this.filtered[handle] = this.allReceived[handle];
+							/* Logic to only have one model at a time and keep a serial count (model_count) */
+							var currentModel = handle.split("-")[0];
+							if(this.filteredModels.hasOwnProperty(currentModel)) {
+								var old_handle = this.filteredModels[currentModel];
+								var old_model_count = this.filtered[old_handle].info.model_count;
+								if(this.allReceived[handle].info.images.length > 3) {
+									delete this.filtered[old_handle];
+									this.filtered[handle] = this.allReceived[handle];
+									this.filtered[handle].info.model_count = old_model_count + 1;
+									this.filteredModels[currentModel] = handle;
+								} else {
+									this.filtered[old_handle].info.model_count = old_model_count + 1;
+								}
+							} else {
+								this.filteredModels[currentModel] = handle;
+								this.filtered[handle] = this.allReceived[handle];
+								this.filtered[handle].info.model_count = 1;
+							}
+							
 						}
 						
 					}
 					this.trickleToGrid();
+				},
+				checkIfModelAlreadyThere: function(handleCheck) {
+					for(handle in this.filtered) {
+						var model = handle.split("-")[0];
+					}
 				},
 				storeAllReceived: function(load) {
 					if(this.allReceived == null) {
@@ -439,7 +465,6 @@
 												// add value as title
 												this.filter_options[field_name][field_value].label = field_value;
 											}
-
 								}
 							}
 						}
@@ -650,7 +675,7 @@
 						if(product.info.vendor == "LG" && product.info.title.indexOf("LG") < 0) {
 							titleString = "LG "+titleString;
 						}
-						titleString = titleString + " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
+						titleString = titleString; //+ " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
 
 						var markDownClass = "";
 						for(var i in product.info.tags) {
@@ -666,6 +691,9 @@
 								'<div class="snapshot">',
 									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" data-first-image="'+first_image+'" data-last-image="'+last_image+'" style="background-image: url(\'http:'+first_image+'\')">',
 									'</a>',
+					                '<div class="product-count">',
+					                	product.info.model_count+" units &mdash; "+product.info.handle.split("-")[0].toUpperCase(),
+					                '</div>',
 								'</div>',
 					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
 									'<dl class="specs">',
@@ -759,7 +787,23 @@
 									for(var i in this.queuedForScroll) {
 										var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
 										var didWhat = 0;
-										if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
+/*
+										if(thePrototypeExtension.filtered[filterIndex] == undefined) {
+											console.log("filterIndex");
+											console.log(filterIndex);
+											console.log(thePrototypeExtension.filtered[filterIndex]);
+											console.log("handle");
+											console.log(handle);
+											console.log(thePrototypeExtension.filtered[handle]);
+										}
+*/
+
+										/* A loose guess to fix the undefined problem with some filterIndexes in the this.filtered objec */
+										if(thePrototypeExtension.filtered[filterIndex] == undefined) {
+											didWhat = 0.5;
+											break;
+											/* End loose guess */
+										} else if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
 											didWhat = 1;
 											break;
 										} else if(thePrototypeExtension.filtered[handle].info[thePrototypeExtension.sort_property] < thePrototypeExtension.filtered[filterIndex].info[thePrototypeExtension.sort_property]) {
