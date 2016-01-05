@@ -493,6 +493,8 @@
 				},
 				renderOptions: function() {
 					var return_string = "";
+					var theThis = this;
+
 					for(var option in this.filter_options) {
 						var ui_label = option.toUpperCase();
 						if(this.settings.tagfields.hasOwnProperty(option)) {
@@ -508,6 +510,11 @@
 							return_string += "<h3>"+ui_label+"</h3>";
 						}
 						return_string += "<ul class=\"tick-boxes\">";
+						Object.keys(theThis.filter_options[option]).sort().forEach(function(key) {
+					        var value = theThis.filter_options[option][key];
+					        delete theThis.filter_options[option][key];
+					        theThis.filter_options[option][key] = value;
+					    });
 						for(var value in this.filter_options[option]) {
 							var valueObject = this.filter_options[option][value];
 							var active_string = "";
@@ -795,6 +802,7 @@
 									for(var i in this.queuedForScroll) {
 										var filterIndex = $(this.queuedForScroll[i]).attr('data-filter-index');
 										var didWhat = 0;
+/*
 										if(thePrototypeExtension.filtered[filterIndex] == undefined) {
 											console.log("filterIndex");
 											console.log(filterIndex);
@@ -803,11 +811,13 @@
 											console.log(handle);
 											console.log(thePrototypeExtension.filtered[handle]);
 										}
+*/
 
 										/* A loose guess to fix the undefined problem with some filterIndexes in the this.filtered objec */
 										if(thePrototypeExtension.filtered[filterIndex] == undefined) {
 											didWhat = 0.5;
 											break;
+											/* End loose guess */
 										} else if(thePrototypeExtension.filtered[filterIndex].info.id == thePrototypeExtension.filtered[handle].info.id) {
 											didWhat = 1;
 											break;

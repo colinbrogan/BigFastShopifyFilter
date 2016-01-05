@@ -485,6 +485,8 @@
 				},
 				renderOptions: function() {
 					var return_string = "";
+					var theThis = this;
+
 					for(var option in this.filter_options) {
 						var ui_label = option.toUpperCase();
 						if(this.settings.tagfields.hasOwnProperty(option)) {
@@ -500,6 +502,11 @@
 							return_string += "<h3>"+ui_label+"</h3>";
 						}
 						return_string += "<ul class=\"tick-boxes\">";
+						Object.keys(theThis.filter_options[option]).sort().forEach(function(key) {
+					        var value = theThis.filter_options[option][key];
+					        delete theThis.filter_options[option][key];
+					        theThis.filter_options[option][key] = value;
+					    });
 						for(var value in this.filter_options[option]) {
 							var valueObject = this.filter_options[option][value];
 							var active_string = "";
