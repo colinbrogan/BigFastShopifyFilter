@@ -703,7 +703,7 @@
 					});
 					$("a.clear-all").click(function(event) {
 						event.preventDefault();
-						$.address.queryString("");
+						$.address.queryString("filter_ready");
 					});
 
 					$('#add-results').click(function(event) {
@@ -771,7 +771,8 @@
 							new_values[field_name].push(field_value);
 					});
 
-					var new_query_string = jQuery.param( new_values, true);
+					var new_query_string = "filter_ready";
+					new_query_string += jQuery.param( new_values, true);
 					$.address.queryString(new_query_string);
 
 				},
