@@ -170,12 +170,10 @@
 						/* leave determines whether or not a product matches all parameters and should be displayed, it begins as true. The idea being, if any current sort parameter doesn't match to the product, the product is discarded. This seems to me be the fastest means of narrowing down a listing */
 						var toFiltered = true;
 
-						console.log("Checking "+this.allReceived[handle].info.description);
 						/* check every url filter criteria passed */
 						for(var criteria in this.filter_criteria) {
 							var clean_criteria = decodeURIComponent(criteria.replace(/\+/g, '%20'));
 							if(this.settings.metafields.hasOwnProperty(clean_criteria)) {
-								console.log("Checking metafields for"+clean_criteria);
 								for(var metafield in this.allReceived[handle].metafields) {
 									var current_metafield_value = this.allReceived[handle].metafields[metafield];
 									if(metafield === criteria) {
@@ -192,9 +190,7 @@
 											}
 											if(somethingMatched) {
 												/* do nothing */
-												console.log("somethingMatched = true 1");
 											} else {
-												console.log("toFiltered = false 1");
 												toFiltered = false;
 												continue;
 											}
@@ -203,11 +199,9 @@
 										} else {
 											var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
 											if(current_metafield_value === current_criteria_value) {
-												console.log("somethingMatched = true 2")
 
 												/* do nothing */
 											} else {
-												console.log("toFiltered = false 2");
 												toFiltered = false;
 												continue;
 											}
@@ -218,7 +212,6 @@
 							} else if(this.settings.tagfields.hasOwnProperty(clean_criteria)) {
 								// create a variable which remains false if a filter criteria is found nowhere in a product's tag
 								var snagged_tag = false;
-								console.log("Checking tags for"+clean_criteria);
 								var trackSameKey = {};
 								for (var tag in this.allReceived[handle].info.tags) {
 									var tagPreValue = this.allReceived[handle].info.tags[tag];
@@ -243,7 +236,6 @@
 													/* do nothing */
 													trackSameKey[clean_criteria] = field_value;
 												} else {
-													console.log("toFiltered = false 3");
 													/* before filtering out, check that another tag hasn't matched the same key */
 													if(trackSameKey.hasOwnProperty(clean_criteria)) {
 														/* do nothing */
@@ -257,15 +249,10 @@
 											// then filter on that parameter only
 											} else {
 												var current_criteria_value = decodeURIComponent(this.filter_criteria[criteria].replace(/\+/g, '%20'));
-												console.log(clean_criteria);
-												console.log(field_name);
-												console.log(current_criteria_value);
-												console.log(field_value);
 												if(current_criteria_value === field_value) {
 													/* do nothing */
 													trackSameKey[clean_criteria] = field_value;
 												} else {
-													console.log("toFiltered = false 4");
 													/* before filtering out, check that another tag hasn't matched the same key */
 													if(trackSameKey.hasOwnProperty(clean_criteria)) {
 														/* do nothing */
@@ -279,7 +266,6 @@
 									}
 								}
 								if(snagged_tag == false) {
-									console.log("toFiltered = false 5");
 									toFiltered = false;
 									continue;
 								}
@@ -295,7 +281,6 @@
 									if(somethingMatched) {
 										/* do nothing */
 									} else {
-										console.log("toFiltered = false 6");
 										toFiltered = false;
 										continue;
 									}	
@@ -304,13 +289,11 @@
 									if(this.allReceived[handle].info.type == criteria_value) {
 										/* do nothing */
 									} else {
-										console.log("toFiltered = false 7");
 										toFiltered = false;
 										continue;
 									}
 								}
 							} else if(this.settings.vendor.enable && criteria == "Vendor") {
-								console.log("Vendor is enabled");
 								if(this.filter_criteria[criteria].constructor == Array) { 
 									var somethingMatched = false;
 									for(var i in this.filter_criteria[criteria]) {
@@ -322,7 +305,6 @@
 									if(somethingMatched) {
 										/* do nothing */
 									} else {
-										console.log("toFiltered = false 6");
 										toFiltered = false;
 										continue;
 									}	
@@ -331,7 +313,6 @@
 									if(this.allReceived[handle].info.vendor == criteria_value) {
 										/* do nothing */
 									} else {
-										console.log("toFiltered = false 7");
 										toFiltered = false;
 										continue;
 									}

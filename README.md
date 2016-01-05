@@ -26,15 +26,22 @@ There is a little bit of setup, but follow the directions below closely, and you
 
 	Add "dist/jquery.big-fast-shopify-filter.js" to `shop/assets`
 
-2. Include the javascript at the bottom of your collection page, after the jquery include
+	Download Asual's jQuery Address version 1.6 from here: [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)
+
+	Add "src/jquery.address.js" to `shop/assets`
+
+3. Include the javascript at the bottom of your collection page, after the jquery include
 
 	```html
+
+	<script src="{% 'jquery.address.js' | asset_url %}" />
+
 	<script src="{% 'Shopify.pipeInCollection.js' | asset_url %}" />
 
 	<script src="{% 'jquery.big-fast-shopify-filter.min.js' | asset_url %}" />
 	```
 
-3. Call the plugin with Theme settings configuration (skip to 3-2 if you simply want to place hard settings on your js page):
+4. Call the plugin with desired settings:
 
 	```
 <script>
@@ -44,14 +51,12 @@ $(document).ready(function() {
 		// file
 	 	var settings = {
 			filter_values: {
-				{% if settings.custom_value_1_field_name != blank %}
-					'{{ settings.custom_value_1_field_name }}': { 
-						"{{ settings.custom_value_1_1_value }}": {
-							image: "{{ 'custom_value_1_1_image.png' | asset_url }}",
-							color: "{{ settings.custom_value_1_1_color }}",
-							icon_code: "{{ settings.custom_value_1_1_icon_code }}",
-							label: "{{ settings.custom_value_1_1_label }}"
-						},
+				"{{ settings.custom_value_1_1_value }}": {
+					image: "{{ 'custom_value_1_1_image.png' | asset_url }}",
+					color: "{{ settings.custom_value_1_1_color }}",
+					icon_code: "{{ settings.custom_value_1_1_icon_code }}",
+					label: "{{ settings.custom_value_1_1_label }}"
+				},
 						"{{ settings.custom_value_1_2_value }}": {
 							image: "{{ 'custom_value_1_2_image.png' | asset_url }}",
 							color: "{{ settings.custom_value_1_2_color }}",
@@ -351,7 +356,7 @@ $(document).ready(function() {
 </script>
 
 	```
-4. Include the markup in your collection page
+5. Include the markup in your collection page
 
 	```html
 	<div id="big-fast-shopify-filter" data-collection="{{ collection.handle }}">
