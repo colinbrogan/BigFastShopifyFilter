@@ -100,7 +100,10 @@
 
 							$("#options-go-here").removeClass("loading");
 						});
+						window.location.hash = "filter_ready";
+
 						$(this.element).on("filterOptionsChanged",function(event) {
+							window.location.hash = "filter_ready";
 							thePrototypeExtension.setActiveOptionsToHash();
 						});
 						
@@ -703,7 +706,8 @@
 					});
 					$("a.clear-all").click(function(event) {
 						event.preventDefault();
-						$.address.queryString("filter_ready");
+						$("ul.tick-boxes button").removeClass("active");
+						thePrototypeExtension.setActiveOptionsToHash();
 					});
 
 					$('#add-results').click(function(event) {
@@ -771,8 +775,7 @@
 							new_values[field_name].push(field_value);
 					});
 
-					var new_query_string = "filter_ready";
-					new_query_string += jQuery.param( new_values, true);
+					var new_query_string = jQuery.param( new_values, true);
 					$.address.queryString(new_query_string);
 
 				},
