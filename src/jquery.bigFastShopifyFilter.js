@@ -99,12 +99,14 @@
 							thePrototypeExtension.filter();
 
 							$("#options-go-here").removeClass("loading");
+							thePrototypeExtension.registerActions();
 						});
 						window.location.hash = "filter_ready";
 
 						$(this.element).on("filterOptionsChanged",function(event) {
 							window.location.hash = "filter_ready";
 							thePrototypeExtension.setActiveOptionsToHash();
+							thePrototypeExtension.registerActions();
 						});
 						
 				},
@@ -697,6 +699,7 @@
 				registerActions: function() {
 					var thePrototypeExtension = this;
 					var $theElement = $(this.element);
+					$("ul.tick-boxes button").unbind("click");
 					$("ul.tick-boxes button").click(function(event) {
 						event.preventDefault();
 						$("ul.product-grid").addClass("loading");
@@ -704,12 +707,16 @@
 				        setTimeout(function() { $theElement.trigger("filterOptionsChanged"); }, 200);
 
 					});
+					$("a.clear-all").unbind("click");
 					$("a.clear-all").click(function(event) {
+
 						event.preventDefault();
+						event.stopPropagation();
 						$("ul.tick-boxes button").removeClass("active");
 						thePrototypeExtension.setActiveOptionsToHash();
 					});
 
+					$('#add-results').unbind("click");
 					$('#add-results').click(function(event) {
 						thePrototypeExtension.infiniteScroll();
 					});
