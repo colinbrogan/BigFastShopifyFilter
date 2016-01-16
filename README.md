@@ -26,9 +26,16 @@ There is a little bit of setup, but follow the directions below closely, and you
 
 	Add "dist/jquery.big-fast-shopify-filter.js" to `shop/assets`
 
+	Download Asual's jQuery Address version 1.6 from here: [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)
+
+	Add "src/jquery.address.js" to `shop/assets`
+
 2. Include the javascript at the bottom of your collection page, after the jquery include
 
 	```html
+
+	<script src="{% 'jquery.address.js' | asset_url %}" />
+
 	<script src="{% 'Shopify.pipeInCollection.js' | asset_url %}" />
 
 	<script src="{% 'jquery.big-fast-shopify-filter.min.js' | asset_url %}" />
