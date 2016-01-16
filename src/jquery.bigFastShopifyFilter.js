@@ -316,6 +316,9 @@
 						if(toFiltered) {
 							/* Logic to only have one model at a time and keep a serial count (model_count) */
 							var currentModel = handle.split("-")[0];
+							if(this.filtered[handle].metafields["Condition"] == "SO") {
+								currentModel = current_model+"_so";
+							}
 							if(this.filteredModels.hasOwnProperty(currentModel)) {
 								var old_handle = this.filteredModels[currentModel];
 								var old_model_count = this.filtered[old_handle].info.model_count;
