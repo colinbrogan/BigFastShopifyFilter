@@ -330,7 +330,7 @@
 							if(this.filteredModels.hasOwnProperty(currentModel)) {
 								var old_handle = this.filteredModels[currentModel];
 								var old_model_count = this.filtered[old_handle].info.model_count;
-								if(this.allReceived[handle].info.price < this.filtered[old_handle].info.price || (this.allReceived[handle].info.images.length > 3 && this.allReceived[handle].info.price <= this.fildered[old_handle].info_price)) {
+								if(this.allReceived[handle].info.price < this.filtered[old_handle].info.price || (this.allReceived[handle].info.images.length > 3 && this.allReceived[handle].info.price <= this.filtered[old_handle].info.price)) {
 									delete this.filtered[old_handle];
 									this.filtered[handle] = this.allReceived[handle];
 									this.filtered[handle].info.model_count = old_model_count + 1;
