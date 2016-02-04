@@ -582,10 +582,12 @@
 								condition = "Closeout";
 								break;
 						}
-						var sdWithImagesClass = "";
+						var hasSDImages = "";
+						var hasSDImagesClass = ""
 						var last_image = "";
 						if(product.info.images.length > 3 && condition == "Scratch & Dent") {
-							sdWithImagesClass = "sd-with-images";
+							hasSDImages = "<span class='has-sd-images'></span>";
+							hasSDImagesClass = " sd-with-images";
 							if(product.info.images[product.info.images.length - 1]) {
 								last_image = product.info.images[product.info.images.length - 1].replace(".jpeg","_medium.jpeg");
 								if(last_image.indexOf(".jpg") > -1) {
@@ -684,25 +686,37 @@
 						}
 						titleString = titleString; //+ " &mdash; "+product.info.handle.split("-")[0].toUpperCase();
 
-						var markDownClass = "";
+						var clearanceMarkUp = "";
 						for(var i in product.info.tags) {
 							if(product.info.tags[i] == "Markdown") {
-								markDownClass += " clearance";
+								clearanceMarkUp += '<span class="clearance">';
+								clearanceMarkUp += "MARKED DOWN";
+								clearanceMarkUp += '</span>';
 							} else if(product.info.tags[i] == "sale") {
-								markDownClass += " on_sale";
+								clearanceMarkUp += '<span class="clearance">';
+								clearanceMarkUp += "ON SALE";
+								clearanceMarkUp += '</span>';
 							}
+						}
+						var pluralCount = "";
+						if(product.info.model_count > 1) {
+							pluralCount = "s";
 						}
 
 						return [
-							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+" "+markDownClass+" "+sdWithImagesClass+"'>",
+							"<li id='p"+product.info.id+"' class='"+product.metafields.Condition.toLowerCase().replace("&","")+hasSDImagesClass+"'>",
 								'<div class="snapshot">',
 									'<a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'" class="product-image '+img_class+'" data-first-image="'+first_image+'" data-last-image="'+last_image+'" style="background-image: url(\'http:'+first_image+'\')">',
 									'</a>',
-					                '<div class="product-count">',
-					                	product.info.model_count+" units &mdash; "+product.info.handle.split("-")[0].toUpperCase(),
-					                '</div>',
+									'<div class="badge-row">',
+						                clearanceMarkUp,
+						                '<span class="product-count">',
+						                	product.info.model_count+"<br> unit" + pluralCount,
+						                '</span>',
+						                hasSDImages,
+									'</div>',
 								'</div>',
-					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+'</a></h4>',
+					            '<h4 class="product-title"><a href="/collections/'+theCollectionHandle+'/products/'+product.info.handle+'">'+titleString+" &mdash; "+product.info.handle.split("-")[0].toUpperCase()+'</a></h4>',
 									'<dl class="specs">',
 										capacityHTML,
 										locationHTML,
@@ -855,7 +869,7 @@
 							var $showResults = $([
 									'<div class="show-results">',
 										'<button class="btn btn-purple" id="add-results">',
-											'Show '+resultsNum+' more results.',
+											'Show '+resultsNum+' more models',
 										'</button>',
 									'</div>'
 								].join("")
@@ -997,9 +1011,9 @@
 					$(this.element).trigger('afterDump');
 				},
 				getProductNumbers: function() {
-					var total_appliances = Object.keys(this.filtered).length;
+					var total_appliances = Object.keys(this.filteredModels).length;
 					var showing_appliances = total_appliances - this.queuedForScroll.length;
-					var result_message = "Showing "+showing_appliances+" / "+total_appliances+" Appliances";
+					var result_message = "<span class='showing'>Showing</span> "+showing_appliances+" / "+total_appliances+" units";
 					$(".result_count").html(result_message);
 				},
 				refresh: function() {
