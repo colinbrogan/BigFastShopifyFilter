@@ -193,7 +193,7 @@
 
 						// go ahead and filter out 41SCRAP and 41SHOP
 						if(this.allReceived[handle].metafields.Location !== undefined) {
-							if(this.allReceived[handle].metafields.Location.toLowerCase() == "41shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41scrap") {
+							if(this.allReceived[handle].metafields.Location.toLowerCase() == "41shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41scrap" || this.allReceived[handle].metafields.Location.toLowerCase() == "42shop" || this.allReceived[handle].metafields.Location.toLowerCase() == "41clear") {
 								toFiltered = false;
 								continue;
 							}
@@ -1024,10 +1024,10 @@
 				getProductNumbers: function() {
 					var total_appliances = Object.keys(this.filteredModels).length;
 					var showing_appliances = total_appliances - this.queuedForScroll.length;
-					var result_message = "<span class='showing'>Showing</span> "+showing_appliances+" / "+total_appliances+" units";
+					var result_message = "<span class='showing'>Showing</span> "+showing_appliances+" / "+total_appliances+" MODELS";
 					$(".result_count").html(result_message);
 				},
-				refresh: function() {
+				refresh: function() { 
 					somePrivateMethod("refresh");
 				},
 
