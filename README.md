@@ -1,6 +1,6 @@
 # jQuery BigFastShopifyFilter, v0.9.0
 
-### Update February, 2018: The version of this jQuery plugin posted here has various bugs, and is no longer maintained. If you need something like this now, I am maintaining a private version of this code for various Shopify stores, and am happy to add a client! Feel free to message me if you are interested. I may also release a simplified version of the up-to-date plugin on Github for free if there is enough interest.
+### Update February, 2018: The version of this jQuery plugin posted here has various bugs, and is no longer maintained. If you need something like this now, I am maintaining a private version of this code for various Shopify stores, and am happy to add a client. Feel free to message me if you are interested. I may also release a simplified version of the up-to-date plugin on Github for free if there is enough interest.
 
 ### You want a good filtering system for Shopify
 
